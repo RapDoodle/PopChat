@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <winsock2.h>
 #include <windows.h>
 #include <iostream>
@@ -13,6 +11,7 @@
 #define QUEUE_SIZE 16
 #define CON_CLIENTS 128
 #define MSG_LEN 140
+#define WAIT_T 1
 
 using namespace std;
 
@@ -207,7 +206,7 @@ void app()
         }
 
         /* Avoid busy waiting */
-        Sleep(1);
+        Sleep(WAIT_T);
     }
 
     /* Any code below should never be executed */
