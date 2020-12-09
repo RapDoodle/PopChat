@@ -7,7 +7,7 @@
 #include <ctime>
 
 #define VERSION "0.1 beta";
-#define DEFAULT_PORT 19135
+#define DEFAULT_PORT 8000
 #define QUEUE_SIZE 16
 #define CON_CLIENTS 128
 #define MSG_LEN 140
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void app();
+void app(int port);
 void consoleLog(string str);
 string getCurrentTimeString();
 BOOL WINAPI intrHandler(DWORD signal);
@@ -27,7 +27,7 @@ int clients[CON_CLIENTS];
 
 int mainSock;
 
-int main()
+int main(int argc, char** argv)
 {
     cout << endl;
     cout << "    _____               _____ _           _    " << endl;
@@ -42,10 +42,19 @@ int main()
 
     string versionInfo = "Pop Chat Server v" VERSION;
     consoleLog(versionInfo);
-    app();
+
+    /* Determine the port number */
+    int port = DEFAULT_PORT;
+    if (argc > 1) {
+        cout << argv[1];
+        port = atoi(argv[1]);
+    }
+
+    /* Call the initialize routine */
+    app(port);
 }
 
-void app()
+void app(int port)
 {
     /* Initialize interrupt handler */
     if (!SetConsoleCtrlHandler(intrHandler, TRUE))
@@ -73,7 +82,7 @@ void app()
 
     /* Initialize the env for sockaddr structure */
     srv.sin_family = AF_INET;
-    srv.sin_port = htons(DEFAULT_PORT);
+    srv.sin_port = htons(port);
     srv.sin_addr.s_addr = INADDR_ANY;
     memset(&srv.sin_zero, 0, 8);
 
@@ -94,21 +103,21 @@ void app()
 
     /* Bind to local port */
     if (bind(mainSock, (struct sockaddr*)&srv, sizeof(sockaddr)) == SOCKET_ERROR) {
-        consoleLog("Unable to bind to port 19135");
+        consoleLog("Unable to bind to port " + to_string(port));
         WSACleanup();
         exit(EXIT_FAILURE);
     } else {
-        consoleLog("Successully bind to port 19135");
+        consoleLog("Successully bind to port " + to_string(port));
     }
 
     /* Listen for incoming requests */
     if (listen(mainSock, QUEUE_SIZE) == SOCKET_ERROR) {
-        consoleLog("Unable to start listening on port 19135");
+        consoleLog("Unable to start listening on port " + to_string(port));
         WSACleanup();
         exit(EXIT_FAILURE);
     } else {
         consoleLog("Server started successfully");
-        consoleLog("Currently listening on port 19135");
+        consoleLog("Currently listening on port " + to_string(port));
     }
 
     nMaxFd = mainSock;
