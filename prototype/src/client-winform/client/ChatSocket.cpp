@@ -2,7 +2,7 @@
 #include <winsock.h>
 #include <string>
 
-#define PORT 19135
+#define PORT 8000
 
 int sock;
 struct sockaddr_in srv;

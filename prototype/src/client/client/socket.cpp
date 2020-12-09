@@ -21,7 +21,7 @@ string clientStartup(string ip, int port)
         return "Fail to open the socket";
     }
 
-    /* Set as an non-blocking socket */
+    /* Set as an blocking socket */
     u_long mode = 0;
     if (ioctlsocket(sock, FIONBIO, &mode) != NO_ERROR) {
         return "ioctlsocket call failed";
@@ -55,7 +55,7 @@ string recvMsg()
             return "";
         return buffStr;
     } else {
-        return "";
+        return "Unable to connect";
     }
 
 }
