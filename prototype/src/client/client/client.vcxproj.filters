@@ -24,38 +24,40 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="client.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtUic Include="client.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
-    <QtMoc Include="client.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RecvThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="ChatSocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="RecvThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ClientForm.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChatSocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="ClientForm.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="ClientForm.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>

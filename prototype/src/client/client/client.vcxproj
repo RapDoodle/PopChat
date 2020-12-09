@@ -92,16 +92,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="RecvThread.cpp" />
-    <ClCompile Include="socket.cpp" />
-    <QtRcc Include="client.qrc" />
-    <QtUic Include="client.ui" />
-    <QtMoc Include="client.h" />
-    <ClCompile Include="client.cpp" />
+    <ClCompile Include="ChatSocket.cpp" />
+    <QtRcc Include="ClientForm.qrc" />
+    <QtUic Include="ClientForm.ui" />
+    <QtMoc Include="ClientForm.h" />
+    <ClCompile Include="ClientForm.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="RecvThread.h" />
-    <ClInclude Include="socket.h" />
+    <ClInclude Include="ChatSocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

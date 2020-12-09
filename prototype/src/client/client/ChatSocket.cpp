@@ -6,6 +6,7 @@ using namespace std;
 int sock;
 struct sockaddr_in srv;
 WSADATA ws;
+bool active = false;
 
 string clientStartup(string ip, int port)
 {
@@ -38,9 +39,13 @@ string clientStartup(string ip, int port)
     if (connect(sock, (struct sockaddr*)&srv, sizeof(srv)) < 0) {
         WSACleanup();
         return "Failed to connect";
-    } else {
-        return "Connected";
     }
+    active = true;
+    return "Connected";
+}
+
+bool isActive() {
+    return active;
 }
 
 string recvMsg()
@@ -49,9 +54,10 @@ string recvMsg()
     int rtOpt = recv(sock, buff, 141, 0);
     if (rtOpt > 0) {
         string buffStr = buff;
-        if (buffStr == "NACK")
-            return "Connected\n";
-        else if (buffStr == "ACK")
+        if (buffStr == "NACK") {
+            /* Connected */
+            return "";
+        } else if (buffStr == "ACK")
             return "";
         return buffStr;
     } else {
@@ -65,7 +71,7 @@ string sendMsg(string msg)
     int msgLen = msg.size();
 
     if (msgLen <= 0)
-        return "Empty message is not allowed";
+        return "";
 
     if (msgLen > 140)
         return "Message too long";
