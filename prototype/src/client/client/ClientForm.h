@@ -1,17 +1,17 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "ui_client.h"
+#include "ui_ClientForm.h"
 #include "RecvThread.h"
 
-class client : public QMainWindow
+class ClientForm : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit client(QWidget *parent = Q_NULLPTR);
-    client::~client();
-    Ui::clientClass ui;
+    explicit ClientForm(QWidget *parent = Q_NULLPTR);
+    ClientForm::~ClientForm();
+    Ui::clientFormClass ui;
     RecvThread* recvThread;
 
 public slots:
@@ -20,6 +20,7 @@ public slots:
 private slots:
     void btnConnectHandler();
     void btnSendHandler();
+    void on_lineEdit_Input_returnPressed();
 
 private:
     

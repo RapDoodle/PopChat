@@ -1,10 +1,11 @@
-#include "client.h"
 #include <QtWidgets/QApplication>
+
+#include "ClientForm.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    client w;
+    ClientForm w;
     w.show();
     return a.exec();
 }
