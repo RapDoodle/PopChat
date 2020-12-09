@@ -9,12 +9,13 @@ class client : public QMainWindow
     Q_OBJECT
 
 public:
-    client(QWidget *parent = Q_NULLPTR);
+    explicit client(QWidget *parent = Q_NULLPTR);
+    client::~client();
     Ui::clientClass ui;
     RecvThread* recvThread;
 
 public slots:
-    void onMsgRecv(std::string);
+    void onMsgRecv(QString);
 
 private slots:
     void btnConnectHandler();

@@ -1,21 +1,24 @@
 #include "RecvThread.h"
 #include <QtCore>
+#include <QMessageBox>
 #include <QDebug>
 #include "client.h"
 #include "socket.h"
+#include <windows.h>
 
-RecvThread::RecvThread(QObject* parent) : QThread(parent)
+RecvThread::RecvThread(QObject* parent) 
+    : QThread(parent)
 {
 
 }
 
 void RecvThread::run()
 {
-    emit msgRecv("Hello world");
     while (true) {
-
-        // emit msgRecv(recvMsg());
-        emit msgRecv("Hello world");
+        string msg = recvMsg();
+        if (msg != "") {
+            QString qsmsg = QString::fromStdString(msg);
+            emit msgRecv(qsmsg);
+        }
     }
-
 }
