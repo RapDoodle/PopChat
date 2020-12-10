@@ -6,19 +6,11 @@
 #include <string>
 #include <ctime>
 
-#define VERSION "0.1 beta";
-#define DEFAULT_PORT 8000
-#define QUEUE_SIZE 16
-#define CON_CLIENTS 128
-#define MSG_LEN 140
-#define WAIT_T 1
+#include "server.h"
+#include "utils.h"
+#include "const.h"
 
 using namespace std;
-
-void app(int port);
-void consoleLog(string str);
-string getCurrentTimeString();
-BOOL WINAPI intrHandler(DWORD signal);
 
 struct sockaddr_in srv;
 
@@ -52,6 +44,8 @@ int main(int argc, char** argv)
 
     /* Call the initialize routine */
     app(port);
+
+    // Tell the user the server is in monitor mode
 }
 
 void app(int port)
@@ -95,9 +89,9 @@ void app(int port)
         exit(EXIT_FAILURE);
     }
 
-    /* Set the socket as a non-blocking TCP socket */
+    /* Set the socket as a blocking TCP socket */
     /* 0 for blocking and 1 for non-blocking */
-    u_long opt = 1;
+    u_long opt = 0;
     if (ioctlsocket(mainSock, FIONBIO, &opt) != 0)
         consoleLog("ioctlsocket call failed");
 
@@ -221,26 +215,5 @@ void app(int port)
     /* Any code below should never be executed */
 }
 
-BOOL WINAPI intrHandler(DWORD signal) {
-    if (signal == CTRL_C_EVENT) {
-        consoleLog("Server shutting down...");
-        WSACleanup();
-    }
-    exit(0);
-}
 
-void consoleLog(string str)
-{
-    cout << "[" << getCurrentTimeString() << "] " << str << endl;
-}
-
-string getCurrentTimeString()
-{
-    auto now = chrono::system_clock::to_time_t(chrono::system_clock::now());
-    tm ptm;
-    localtime_s(&ptm, &now);
-    char strBuf[21];
-    strftime(strBuf, sizeof(strBuf), "%Y-%m-%d %H:%M:%S", &ptm);
-    return strBuf;
-}
 
