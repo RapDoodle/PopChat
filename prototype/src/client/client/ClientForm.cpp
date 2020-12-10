@@ -40,6 +40,7 @@ void ClientForm::btnConnectHandler()
 void ClientForm::btnSendHandler() 
 {
     ui.plainTextEdit_Msg->appendPlainText(QString::fromStdString(sendMsg(ui.lineEdit_Input->text().toStdString().c_str())));
+    ui.lineEdit_Input->setText(QStringLiteral(""));
 }
 
 void ClientForm::onMsgRecv(QString msg)
@@ -50,5 +51,4 @@ void ClientForm::onMsgRecv(QString msg)
 void ClientForm::on_lineEdit_Input_returnPressed()
 {
     ClientForm::btnSendHandler();
-    ui.lineEdit_Input->setText(QStringLiteral(""));
 }
