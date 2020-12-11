@@ -1,5 +1,4 @@
 #pragma once
-#define VERSION "0.1 beta";
 #define DEFAULT_PORT 8000
 #define QUEUE_SIZE 16
 #define CON_CLIENTS 128

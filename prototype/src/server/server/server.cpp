@@ -9,6 +9,7 @@
 #include "server.h"
 #include "utils.h"
 #include "const.h"
+#include "../../common/common/protocol.h"
 
 using namespace std;
 

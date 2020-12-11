@@ -1,3 +1,7 @@
+#ifndef __INTELLISENSE__
+#include <QMutex>
+#endif
+
 #include <qapplication.h>
 #include <qDebug>
 #include <iostream>
