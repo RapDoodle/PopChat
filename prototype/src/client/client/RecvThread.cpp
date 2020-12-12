@@ -16,6 +16,10 @@ void RecvThread::run()
 {
     while (true) {
         string msg = recvMsg();
+
+        if (!isActive())
+            this->terminate();
+
         if (msg.size() > 0) {
             QString qsmsg = QString::fromStdString(msg);
             emit msgRecv(qsmsg.trimmed());

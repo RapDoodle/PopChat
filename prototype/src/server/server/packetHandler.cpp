@@ -13,8 +13,8 @@ using namespace std;
 int packetSend(int client, string content)
 {
     string packet = packetWrapper(content);
-    send(client, packet.c_str(), packet.length(), 0);
-    return 0;
+    cout << "[DEBUG]" << packet << endl;
+    return send(client, packet.c_str(), packet.length(), 0);
 }
 
 int packetHandler(struct Client* client, char* buff)
@@ -26,7 +26,7 @@ int packetHandler(struct Client* client, char* buff)
     string version = nextParam(&srchStr);
 
     if (version != PROTOCOL_VERSION) {
-        packetSend(client->socketId, PACKET_TYPE_SUCCESS " Incompatible protocol version");
+        packetSend(client->socketId, PACKET_TYPE_ERROR " Incompatible protocol version");
         return -1;
     }
 
@@ -38,17 +38,10 @@ int packetHandler(struct Client* client, char* buff)
     }
 
     string type = nextParam(&srchStr);
-    int typeInt;
-    try {
-        typeInt = stoi(type);
-    } catch (const std::invalid_argument&) {
-        typeInt = -1;
-    }
-    cout << type << endl;
+
     /* Route different packets to different routine */
     if (type == PACKET_TYPE_PING) {
         /* Ping */
-        cout << "Ping!" << type << endl;
         packetSend(client->socketId, PACKET_TYPE_PONG);
     } else if (type == PACKET_TYPE_CREATE_ROOM) {
         /* Create room */
@@ -58,9 +51,12 @@ int packetHandler(struct Client* client, char* buff)
             return -1;
         }
         string pwd = nextParam(&srchStr);
-        client->roomId = createRoom(pwd);
-        client->nickName = nextParam(&srchStr);
-        packetSend(client->socketId, PACKET_TYPE_CLIENT_ACK " Joined successfully");
+        int roomId = createRoom(pwd);
+        string nickName = nextParam(&srchStr);
+        client->roomId = roomId;
+        client->nickName = nickName;
+        packetSend(client->socketId, PACKET_TYPE_SUCCESS " Joined successfully. Room number: " + 
+            to_string(roomId) + ". Room password: " + pwd);
     } else if (type == PACKET_TYPE_JOIN_ROOM) {
         /* Join the room */
         string roomId = nextParam(&srchStr);
@@ -71,25 +67,41 @@ int packetHandler(struct Client* client, char* buff)
             return -1;
         }
         
+        bool found = false;
+
         for (int i = 0; i < MAX_ROOMS; i++) {
             if (rooms[i].roomId == safeToInt(roomId)) {
+                found = true;
                 string pwd = nextParam(&srchStr);
                 if (pwd != rooms[i].roomPassword) {
                     packetSend(client->socketId, PACKET_TYPE_ERROR " Incorrect password");
                     return -1;
                 }
                 client->roomId = rooms[i].roomId;
+                string nickName = nextParam(&srchStr);
+                client->nickName = nickName;
                 packetSend(client->socketId, PACKET_TYPE_SUCCESS " Joined successfully");
             }
         }
+
+        if (!found) {
+            packetSend(client->socketId, PACKET_TYPE_ERROR " Room number not found. Consider creating one?");
+            return -1;
+        }
+    } else if (type == PACKET_TYPE_LEAVE_ROOM) {
+        client->roomId = NULL;
+        client->nickName = "";
+        packetSend(client->socketId, PACKET_TYPE_SUCCESS " You've left the room successfully");
     } else if (type == PACKET_TYPE_CLIENT_SEND) {
-        cout << client->roomId << endl;
         if (client->roomId == NULL) {
             packetSend(client->socketId, PACKET_TYPE_ERROR " You are not in any room");
             return -1;
         }
         for (int i = 0; i < CON_CLIENTS; i++) {
-            if (onlineClients[i].socketId != client->socketId && onlineClients[i].roomId == client->roomId) {
+            /*if (onlineClients[i].socketId != client->socketId && onlineClients[i].roomId == client->roomId) {
+                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickName + "> " + srchStr);
+            }*/
+            if (onlineClients[i].roomId == client->roomId) {
                 packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickName + "> " + srchStr);
             }
         }

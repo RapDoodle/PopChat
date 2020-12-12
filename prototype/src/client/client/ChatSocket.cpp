@@ -1,12 +1,17 @@
 #include <winsock2.h>
 #include <string>
 
+#include "protocol.h"
+
 using namespace std;
 
 int sock;
 struct sockaddr_in srv;
 WSADATA ws;
 bool active = false;
+int errCount = 0;
+
+#define MAX_ATTEMP 100
 
 string clientStartup(string ip, int port)
 {
@@ -44,24 +49,33 @@ string clientStartup(string ip, int port)
     return "Connected";
 }
 
+int packetSend(string content)
+{
+    string packet = packetWrapper(content);
+    return send(sock, packet.c_str(), packet.length() + 1, 0);
+}
+
 bool isActive() {
     return active;
 }
 
 string recvMsg()
 {
-    char buff[140 + 1] = {};
-    int rtOpt = recv(sock, buff, 141, 0);
+    char buff[256] = {};
+    int rtOpt = recv(sock, buff, 256, 0);
     if (rtOpt > 0) {
+        /* Reset the error counter */
+        errCount = 0;
         string buffStr = buff;
-        if (buffStr == "NACK") {
-            /* Connected */
-            return "";
-        } else if (buffStr == "ACK")
-            return "";
         return buffStr;
     } else {
-        return "Unable to connect";
+        errCount++;
+        if (errCount >= MAX_ATTEMP) {
+            active = false;
+            WSACleanup();
+            return packetWrapper(PACKET_TYPE_ERROR " Lost connection with the server");
+        }
+        return "";
     }
 
 }
@@ -76,12 +90,10 @@ string sendMsg(string msg)
     if (msgLen > 140)
         return "Message too long";
 
-    char charStr[1024];
-    strcpy(charStr, msg.c_str());
-
-    if (send(sock, charStr, 140, 0) == SOCKET_ERROR) {
+    if (packetSend(PACKET_TYPE_CLIENT_SEND " " + msg) == SOCKET_ERROR) {
         return "Failed to send";
     } else {
-        return msg;
+        // return msg;
+        return "";  // Wait for the server to return the message
     }
 }
