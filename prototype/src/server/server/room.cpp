@@ -9,7 +9,7 @@ using namespace std;
 
 int createRoom(string roomPassword)
 {
-	// Verify for any collision
+	// TO-DO: Check for any collision
 	for (int i = 0; i < MAX_ROOMS; i++) {
 		if (rooms[i].roomId == NULL) {
 			srand(time(NULL));

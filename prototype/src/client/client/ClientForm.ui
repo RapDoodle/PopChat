@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>599</width>
-    <height>377</height>
+    <width>751</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -22,13 +22,17 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>581</width>
-      <height>331</height>
+      <width>732</width>
+      <height>371</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="1" column="0" colspan="2">
-      <widget class="QPlainTextEdit" name="plainTextEdit_Msg"/>
+      <widget class="QPlainTextEdit" name="plainTextEdit_Msg">
+       <property name="textInteractionFlags">
+        <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+       </property>
+      </widget>
      </item>
      <item row="2" column="0">
       <widget class="QLineEdit" name="lineEdit_Input"/>
@@ -42,30 +46,30 @@
      </item>
      <item row="0" column="0" colspan="2">
       <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="3">
-        <widget class="QLineEdit" name="lineEdit_Room">
+       <item row="1" column="4">
+        <widget class="QLineEdit" name="lineEdit_Password">
          <property name="maximumSize">
           <size>
            <width>80</width>
            <height>16777215</height>
           </size>
          </property>
-         <property name="text">
-          <string>1</string>
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
          </property>
         </widget>
        </item>
-       <item row="1" column="4">
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Port</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="6">
         <widget class="QPushButton" name="pushButton_Join">
          <property name="text">
           <string>Join</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="lineEdit_IP">
-         <property name="text">
-          <string>127.0.0.1</string>
          </property>
         </widget>
        </item>
@@ -73,6 +77,13 @@
         <widget class="QLabel" name="label">
          <property name="text">
           <string>IP</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Room</string>
          </property>
         </widget>
        </item>
@@ -89,10 +100,24 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_2">
+       <item row="1" column="7">
+        <widget class="QPushButton" name="pushButton_Create">
          <property name="text">
-          <string>Port</string>
+          <string>Create</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Password</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Nickname</string>
          </property>
         </widget>
        </item>
@@ -103,10 +128,40 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
-        <widget class="QLabel" name="label_3">
+       <item row="1" column="5">
+        <widget class="QLineEdit" name="lineEdit_Nickname">
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="lineEdit_IP">
          <property name="text">
-          <string>Room</string>
+          <string>127.0.0.1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLineEdit" name="lineEdit_Room">
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="8">
+        <widget class="QPushButton" name="pushButton_Leave">
+         <property name="text">
+          <string>Leave</string>
          </property>
         </widget>
        </item>
@@ -120,7 +175,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>599</width>
+     <width>751</width>
      <height>26</height>
     </rect>
    </property>
@@ -132,10 +187,14 @@
   <tabstop>lineEdit_Port</tabstop>
   <tabstop>pushButton_Connect</tabstop>
   <tabstop>lineEdit_Room</tabstop>
+  <tabstop>lineEdit_Password</tabstop>
+  <tabstop>lineEdit_Nickname</tabstop>
   <tabstop>pushButton_Join</tabstop>
+  <tabstop>pushButton_Create</tabstop>
+  <tabstop>pushButton_Leave</tabstop>
+  <tabstop>plainTextEdit_Msg</tabstop>
   <tabstop>lineEdit_Input</tabstop>
   <tabstop>pushButton_Send</tabstop>
-  <tabstop>plainTextEdit_Msg</tabstop>
  </tabstops>
  <resources>
   <include location="ClientForm.qrc"/>

@@ -96,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="protocol.cpp" />
     <ClCompile Include="RecvThread.cpp" />
     <ClCompile Include="ChatSocket.cpp" />
     <QtRcc Include="ClientForm.qrc" />
@@ -105,6 +106,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="protocol.h" />
     <QtMoc Include="RecvThread.h" />
     <ClInclude Include="ChatSocket.h" />
   </ItemGroup>
