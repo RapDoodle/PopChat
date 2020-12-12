@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#include <string>
+
 int calculateCheckSum(string s);
 string nextParam(string* srchStr);
 string packetWrapper(string content);

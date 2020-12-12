@@ -4,3 +4,4 @@
 #define CON_CLIENTS 128
 #define MSG_LEN 140
 #define WAIT_T 1
+#define MAX_ROOMS 50

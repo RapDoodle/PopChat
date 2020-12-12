@@ -141,11 +141,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="packetHandler.cpp" />
+    <ClCompile Include="protocol.cpp" />
+    <ClCompile Include="room.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="const.h" />
+    <ClInclude Include="packetHandler.h" />
+    <ClInclude Include="protocol.h" />
+    <ClInclude Include="room.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>

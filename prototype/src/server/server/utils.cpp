@@ -29,3 +29,12 @@ string getCurrentTimeString()
     strftime(strBuf, sizeof(strBuf), "%Y-%m-%d %H:%M:%S", &ptm);
     return strBuf;
 }
+
+int safeToInt(string n)
+{
+    try {
+        return stoi(n);
+    } catch (const std::invalid_argument&) {
+        return -1;
+    }
+}

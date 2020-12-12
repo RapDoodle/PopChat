@@ -1,22 +1,25 @@
-#include <winsock2.h>
-#include <windows.h>
-#include <iostream>
-#include <iomanip>
+using namespace std;
+
+#include <ctime>
 #include <chrono>
 #include <string>
-#include <ctime>
+#include <iomanip>
+#include <iostream>
+#include <windows.h>
+#include <winsock2.h>
 
-#include "server.h"
+#include "room.h"
 #include "utils.h"
 #include "const.h"
-#include "../../common/common/protocol.h"
-
-using namespace std;
+#include "server.h"
+#include "protocol.h"
+#include "packetHandler.h"
 
 struct sockaddr_in srv;
 
 int nMaxFd = 0;
-int clients[CON_CLIENTS];
+struct Client onlineClients[CON_CLIENTS];
+struct Room rooms[MAX_ROOMS];
 
 int mainSock;
 
@@ -33,7 +36,7 @@ int main(int argc, char** argv)
     cout << "              |_|                             " << endl;
     cout << endl;
 
-    string versionInfo = "Pop Chat Server v" VERSION;
+    string versionInfo = "Pop Chat Server v" SRV_VERSION;
     consoleLog(versionInfo);
 
     /* Determine the port number */
@@ -134,10 +137,11 @@ void app(int port)
         FD_SET(mainSock, &fr);
         FD_SET(mainSock, &fe);
 
+        /* Bind file descriptors to sockets */
         for (int i = 0; i < CON_CLIENTS; i++) {
-            if (clients[i] != 0) {
-                FD_SET(clients[i], &fr);
-                FD_SET(clients[i], &fe);
+            if (onlineClients[i].socketId != 0) {
+                FD_SET(onlineClients[i].socketId, &fr);
+                FD_SET(onlineClients[i].socketId, &fe);
             }
         }
 
@@ -158,9 +162,9 @@ void app(int port)
                     /* New socket connection */
                     int i;
                     for (i = 0; i < CON_CLIENTS; i++) {
-                        if (clients[i] == 0) {
-                            clients[i] = currSock;
-                            send(currSock, "NACK", 5, 0);
+                        if (onlineClients[i].socketId == 0) {
+                            onlineClients[i].socketId = currSock;
+                            packetSend(currSock, "04 Connected");
                             break;
                         }
                     }
@@ -172,27 +176,17 @@ void app(int port)
                 for (int i = 0; i < CON_CLIENTS; i++) {
                     char recvBuff[MSG_LEN + 1];
 
-                    if (FD_ISSET(clients[i], &fr)) {
-                        if (recv(clients[i], recvBuff, MSG_LEN + 1, 0) < 0) {
-                            closesocket(clients[i]);
-                            clients[i] = 0;
+                    if (FD_ISSET(onlineClients[i].socketId, &fr)) {
+                        if (recv(onlineClients[i].socketId, recvBuff, MSG_LEN + 1, 0) < 0) {
+                            closesocket(onlineClients[i].socketId);
+                            onlineClients[i].socketId = 0;
+                            // TO-DO: Clean other variables
                         } else {
-                            /* handle the new message from the client */
+                            /* Handle the new message from the client */
                             if (strlen(recvBuff) > 0) {
-                                cout << "[" << clients[i] << "]: " << recvBuff << endl;
-
-                                /* Broadcast the message */
-                                for (int j = 0; j < CON_CLIENTS; j++) {
-                                    if (clients[j] != 0 && i != j) {
-                                        try {
-                                            send(clients[j], recvBuff, 140, 0);
-                                        } catch (int e) {
-                                            consoleLog(to_string(e));
-                                        }
-                                    }
-                                }
+                                cout << "[" << onlineClients[i].socketId << "][" << onlineClients[i].roomId << "][" << onlineClients[i].nickName << "]: " << recvBuff << endl;
+                                packetHandler(&onlineClients[i], recvBuff);
                             }
-                            send(clients[i], "ACK", 4, 0);
                         }
                     } 
                 }
