@@ -5,7 +5,6 @@ using namespace std;
 #include <string>
 #include <iomanip>
 #include <iostream>
-#include <windows.h>
 #include <winsock2.h>
 
 #include "room.h"

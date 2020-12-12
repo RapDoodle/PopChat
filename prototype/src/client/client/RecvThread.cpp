@@ -1,7 +1,6 @@
 #include <QtCore>
-#include <QMessageBox>
 #include <QDebug>
-#include <windows.h>
+#include <QMessageBox>
 
 #include "ClientForm.h"
 #include "ChatSocket.h"
