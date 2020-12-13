@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>chatRoom</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -56,13 +59,13 @@
        </font>
       </property>
      </widget>
-     <widget class="QTextEdit" name="MessageEdit">
+     <widget class="QTextEdit" name="messageField">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>430</y>
+        <y>480</y>
         <width>641</width>
-        <height>201</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="font">
@@ -70,6 +73,13 @@
         <family>Segoe UI</family>
         <pointsize>9</pointsize>
        </font>
+      </property>
+      <property name="cursor" stdset="0">
+       <cursorShape>IBeamCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">margin-left: 15px;
+margin-right: 15px;</string>
       </property>
       <property name="html">
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -92,13 +102,13 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="textBrowser">
+     <widget class="QTextBrowser" name="messages">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>641</width>
-        <height>431</height>
+        <height>481</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -110,18 +120,22 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>12</pointsize>
+        <pointsize>9</pointsize>
        </font>
       </property>
       <property name="cursor" stdset="0">
        <cursorShape>ArrowCursor</cursorShape>
       </property>
+      <property name="styleSheet">
+       <string notr="true">margin: 15px;
+background-color: white;</string>
+      </property>
      </widget>
      <widget class="QPushButton" name="sendButton">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>579</y>
+        <x>510</x>
+        <y>580</y>
         <width>101</width>
         <height>31</height>
        </rect>
@@ -141,6 +155,12 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>messageField</tabstop>
+  <tabstop>sendButton</tabstop>
+  <tabstop>messages</tabstop>
+  <tabstop>relationship</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

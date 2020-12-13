@@ -20,5 +20,5 @@ class EntranceForm : public QWidget
 	private:
 		Ui::EntranceFormClass ui;
 		ChatForm* room;
-		void toChatForm(int roomID);
+		void EntranceForm::toChatForm(QString roomID);
 };

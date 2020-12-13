@@ -14,7 +14,7 @@ using namespace std;
 int packetSend(int client, string content)
 {
     string packet = packetWrapper(content);
-    cout << "[DEBUG]" << packet << endl;
+    cout << "[DEBUG] " << packet << endl;
     return send(client, packet.c_str(), packet.length(), 0);
 }
 
@@ -58,15 +58,18 @@ int packetHandler(struct Client* client, char* buff)
         client->roomId = roomId;
         client->nickName = nickName;
         client->socketSessionId = createSocketSession(client->ip, client->nickName);
-        packetSend(client->socketId, PACKET_TYPE_SUCCESS " Joined successfully. Room number: " + 
-            to_string(roomId) + ". Room password: " + pwd);
+
+        /* Admitted procedure */
+        packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickName);
+        client->status = CREATED;
+        
 
     } else if (type == PACKET_TYPE_JOIN_ROOM) {
         /* Join the room */
         string roomId = nextParam(&srchStr);
 
         if (client->roomId != NULL && client->roomId != safeToInt(roomId)) {
-            packetSend(client->socketId, PACKET_TYPE_ERROR " You've already another room " +
+            packetSend(client->socketId, PACKET_TYPE_FAILED " You've already joined another room " +
                 to_string(client->roomId));
             return -1;
         }
@@ -78,19 +81,19 @@ int packetHandler(struct Client* client, char* buff)
                 found = true;
                 string pwd = nextParam(&srchStr);
                 if (pwd != rooms[i].roomPassword) {
-                    packetSend(client->socketId, PACKET_TYPE_ERROR " Incorrect password");
+                    packetSend(client->socketId, PACKET_TYPE_FAILED " Incorrect password");
                     return -1;
                 }
                 client->roomId = rooms[i].roomId;
                 string nickName = nextParam(&srchStr);
                 client->nickName = nickName;
                 client->socketSessionId = createSocketSession(client->ip, client->nickName);
-                packetSend(client->socketId, PACKET_TYPE_SUCCESS " Joined successfully");
+                packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickName);
             }
         }
 
         if (!found) {
-            packetSend(client->socketId, PACKET_TYPE_ERROR " Room number not found. Consider creating one?");
+            packetSend(client->socketId, PACKET_TYPE_FAILED " Room number not found. Consider creating one?");
             return -1;
         }
 
@@ -98,6 +101,24 @@ int packetHandler(struct Client* client, char* buff)
         client->roomId = NULL;
         client->nickName = "";
         packetSend(client->socketId, PACKET_TYPE_SUCCESS " You've left the room successfully");
+
+    } else if (type == PACKET_TYPE_JOINED) {
+        if (client->status == CREATED) {
+            for (int i = 0; i < MAX_ROOMS; i++) {
+                if (rooms[i].roomId == client->roomId) {
+                    packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot Created successfully. Room number: " +
+                        to_string(rooms[i].roomId) + ". Room password: " + rooms[i].roomPassword);
+                    break;
+                }
+            }
+            client->status = JOINED;
+        } else if (client->status == JOINING) {
+            packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot You've joined room " + to_string(client->roomId));
+            client->status = JOINED;
+        } else {
+            packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot Welcome back to room " + to_string(client->roomId));
+            client->status = JOINED;
+        }
 
     } else if (type == PACKET_TYPE_CLIENT_SEND) {
         if (client->roomId == NULL) {
@@ -113,7 +134,7 @@ int packetHandler(struct Client* client, char* buff)
             }
         }
 
-        packetSend(client->socketId, PACKET_TYPE_SERVER_ACK);
+        // packetSend(client->socketId, PACKET_TYPE_SERVER_ACK);
 
         for (int i = 0; i < MAX_ROOMS; i++) {
             if (rooms[i].roomId == client->roomId) {

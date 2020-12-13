@@ -1,8 +1,11 @@
 #pragma once
 
+#include <QMutex>
 #include <QWidget>
 #include <QCloseEvent>
 #include "ui_ChatForm.h"
+
+#include "RecvThread.h"
 
 class ChatForm : public QWidget
 {
@@ -11,6 +14,10 @@ class ChatForm : public QWidget
 	public:
 		ChatForm(QWidget *parent = Q_NULLPTR);
 		~ChatForm();
+		RecvThread* recvThread;
+
+	public slots:
+		void onMsgRecv(QString);
 
 	private:
 		Ui::ChatFormClass ui;
