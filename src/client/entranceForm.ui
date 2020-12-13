@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>entranceFormClass</class>
- <widget class="QWidget" name="entranceFormClass">
+ <class>EntranceFormClass</class>
+ <widget class="QWidget" name="EntranceFormClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -37,7 +37,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabJoin">
       <attribute name="title">

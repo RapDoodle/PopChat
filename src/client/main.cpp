@@ -1,10 +1,10 @@
-#include "connectForm.h"
+#include "ConnectForm.h"
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    connectForm w;
+    ConnectForm w;
     w.show();
     return a.exec();
 }

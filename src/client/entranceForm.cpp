@@ -1,52 +1,82 @@
-#include "entranceForm.h"
-#include "chatForm.h"
-#include<qmessagebox.h>
+#include "Protocol.h"
+#include "MessageBox.h"
+#include "ChatSocket.h"
+#include "EntranceForm.h"
+#include "ChatForm.h"
 
-entranceForm::entranceForm(QWidget *parent)
+EntranceForm::EntranceForm(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
-	connect(ui.JoinRoom_2, SIGNAL(clicked()), this, SLOT(checkJoin()));
-	connect(ui.CreateNewRoom_2, SIGNAL(clicked()), this, SLOT(checkCreate()));
+	connect(ui.JoinRoom_2, SIGNAL(clicked()), this, SLOT(btnJoinHandler()));
+	connect(ui.CreateNewRoom_2, SIGNAL(clicked()), this, SLOT(btnCreateHandler()));
 }
 
-entranceForm::~entranceForm()
+EntranceForm::~EntranceForm()
 {
+
 }
 
-void entranceForm::checkJoin() {
+void EntranceForm::btnJoinHandler() 
+{
 	QString nickName = ui.MyJoinNickname_4->text();
-	QString chat = ui.ChatID_4->text();
+	QString roomId = ui.ChatID_4->text();
 	QString password = ui.ExistRoomPassword_4->text();
 
-	if (nickName.isEmpty() || chat.isEmpty()|| password.isEmpty())
-		QMessageBox::warning(this, "Invalid Input", "Please input all the required infornation!");
-	else {
+	if (nickName.isEmpty() || roomId.isEmpty()) {
+		msgBoxWarning("The field for nickname, room number cannot be empty");
 
+	}  else {
 
+		/* Before joining the room */
+		int res = packetSend(PACKET_TYPE_JOIN_ROOM " " + 
+			roomId.toStdString() + " " + 
+			password.toStdString() + " " + 
+			nickName.toStdString());
 
-		//密码是否正确 房间是否存在 以及 昵称有无重复
-		tochatForm(20201212);
+		if (res == -1) {
+			/* SOCKET_ERROR */
+			msgBoxCritical("Netowrk error");
+			return;
+		}
+
+		string packet = recvMsg();
+		int type = universalVerifier(packet, false);
+
+		msgBoxInfo(QString::fromStdString(packet));
+
+		toChatForm(20201212);
 	}
 }
 
-void entranceForm::checkCreate() {
-
+void EntranceForm::btnCreateHandler()
+{
 	QString nickName = ui.MyNickname_4->text();
 	QString password = ui.NewRoomPassword_4->text();
 
-	if (nickName.isEmpty() || password.isEmpty())
-		QMessageBox::warning(this, "Invalid Input", "Please input all the needed infornation!");
-	else {
+	if (nickName.isEmpty() || password.isEmpty()) {
+		msgBoxWarning("The field for nickname and password cannot be empty");
+	} else {
+		/* Before creating the room */
+		if (nickName.length() == 0) {
+			msgBoxWarning("The field for nickname cannot be empty");
+			return;
+		}
 
-		//获得房间ID
+		int res = packetSend(PACKET_TYPE_CREATE_ROOM " " +
+			password.toStdString() + " " + nickName.toStdString());
 
-		tochatForm(20201212);
+		if (res == -1) {
+			msgBoxCritical("Netowrk error");
+			return;
+		}
+
+		toChatForm(20201212);
 	}
 }
 
-void entranceForm::tochatForm(int roomID){
-	room = new chatForm;
+void EntranceForm::toChatForm(int roomID) {
+	room = new ChatForm;
 	room->setWindowTitle("Chat Room: " + QString::number(roomID, 10));
 	room->show();
 	hide();

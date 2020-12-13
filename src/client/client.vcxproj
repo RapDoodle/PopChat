@@ -46,6 +46,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Link>
+      <AdditionalDependencies>$(Qt_LIBS_);Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
     <QtInstall>msvc2019</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
@@ -86,29 +91,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="protocol.cpp" />
-    <ClCompile Include="recvThreadcpp.cpp" />
+    <ClCompile Include="MessageBox.cpp" />
+    <ClCompile Include="Protocol.cpp" />
+    <ClCompile Include="RecvThread.cpp" />
+    <ClCompile Include="utils.cpp" />
     <QtRcc Include="connectForm.qrc" />
-    <QtUic Include="chatForm.ui" />
-    <QtUic Include="connectForm.ui" />
-    <QtMoc Include="connectForm.h" />
-    <ClCompile Include="chatForm.cpp" />
-    <ClCompile Include="chatSocket.cpp" />
-    <ClCompile Include="connectForm.cpp" />
-    <ClCompile Include="entranceForm.cpp" />
+    <ClCompile Include="ChatForm.cpp" />
+    <ClCompile Include="ChatSocket.cpp" />
+    <ClCompile Include="ConnectForm.cpp" />
+    <ClCompile Include="EntranceForm.cpp" />
     <ClCompile Include="main.cpp" />
-    <QtUic Include="entranceForm.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="entranceForm.h" />
+    <QtMoc Include="RecvThread.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="chatForm.h" />
+    <QtMoc Include="ChatForm.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="chatSocket.h" />
-    <ClInclude Include="protocol.h" />
-    <ClInclude Include="recvThread.h" />
+    <ClInclude Include="ChatSocket.h" />
+    <ClInclude Include="MessageBox.h" />
+    <ClInclude Include="Protocol.h" />
+    <ClInclude Include="utils.h" />
+    <QtMoc Include="EntranceForm.h" />
+    <QtMoc Include="ConnectForm.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="ChatForm.ui" />
+    <QtUic Include="ConnectForm.ui" />
+    <QtUic Include="EntranceForm.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
