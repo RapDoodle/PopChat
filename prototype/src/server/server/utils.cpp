@@ -38,3 +38,16 @@ int safeToInt(string n)
         return -1;
     }
 }
+
+string safeToSQL(string s)
+{
+    int len = s.length();
+    for (int i = 0; i <= len; i++) {
+        if (s[i] == '\'' || s[i] == '\\') {
+            s.insert(i, "\\");
+            len++;
+            i++;
+        }
+    }
+    return s;
+}

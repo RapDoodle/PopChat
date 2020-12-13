@@ -57,6 +57,7 @@ int packetHandler(struct Client* client, char* buff)
         string nickName = nextParam(&srchStr);
         client->roomId = roomId;
         client->nickName = nickName;
+        client->socketSessionId = createSocketSession(client->ip, client->nickName);
         packetSend(client->socketId, PACKET_TYPE_SUCCESS " Joined successfully. Room number: " + 
             to_string(roomId) + ". Room password: " + pwd);
 
@@ -83,6 +84,7 @@ int packetHandler(struct Client* client, char* buff)
                 client->roomId = rooms[i].roomId;
                 string nickName = nextParam(&srchStr);
                 client->nickName = nickName;
+                client->socketSessionId = createSocketSession(client->ip, client->nickName);
                 packetSend(client->socketId, PACKET_TYPE_SUCCESS " Joined successfully");
             }
         }
@@ -111,15 +113,15 @@ int packetHandler(struct Client* client, char* buff)
             }
         }
 
+        packetSend(client->socketId, PACKET_TYPE_SERVER_ACK);
+
         for (int i = 0; i < MAX_ROOMS; i++) {
             if (rooms[i].roomId == client->roomId) {
-                int sessionId = rooms[i].sessionId;
-                if (sessionId != -1)
-                    saveMessage(sessionId, "<" + client->nickName + "> " + srchStr);
+                int chatSessionId = rooms[i].sessionId;
+                if (chatSessionId != -1)
+                    saveMessage(chatSessionId, client->socketSessionId, srchStr);
             }
         }
-
-        packetSend(client->socketId, PACKET_TYPE_SERVER_ACK);
 
     } else {
         packetSend(client->socketId, PACKET_TYPE_ERROR);

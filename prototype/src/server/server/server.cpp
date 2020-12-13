@@ -6,6 +6,7 @@ using namespace std;
 #include <iomanip>
 #include <iostream>
 #include <winsock2.h>
+#include <Ws2tcpip.h>
 
 #include "db.h"
 #include "room.h"
@@ -155,10 +156,18 @@ void app(int port)
             if (FD_ISSET(mainSock, &fe)) {
                 /* Check for exceptions */
                 consoleLog("WARNING: Exception occurred");
+
             } else if (FD_ISSET(mainSock, &fr)) {
                 /* Valid incoming request */
                 int nLen = sizeof(struct sockaddr);
-                int currSock = accept(mainSock, NULL, &nLen);
+                SOCKADDR_IN addr;
+                char ip[INET_ADDRSTRLEN];
+
+                /* Accept connection from the main (master) socket */
+                int currSock = accept(mainSock, (SOCKADDR*)&addr, &nLen);
+                inet_ntop(AF_INET, &(addr.sin_addr), ip, INET_ADDRSTRLEN);
+                string ipStr = ip;
+                consoleLog("Received connection from " + ipStr);
 
                 if (currSock > 0) {
                     /* New socket connection */
@@ -166,6 +175,7 @@ void app(int port)
                     for (i = 0; i < CON_CLIENTS; i++) {
                         if (onlineClients[i].socketId == 0) {
                             onlineClients[i].socketId = currSock;
+                            onlineClients[i].ip = ip;
                             packetSend(currSock, "04 Connected");
                             break;
                         }
@@ -174,12 +184,13 @@ void app(int port)
                     if (i == CON_CLIENTS)
                         consoleLog("WARNING: Maximum concurrent connection reached");
                 }
+
             } else {
                 for (int i = 0; i < CON_CLIENTS; i++) {
-                    char recvBuff[MSG_LEN + 1];
+                    char recvBuff[PACKET_MAX_SIZE];
 
                     if (FD_ISSET(onlineClients[i].socketId, &fr)) {
-                        if (recv(onlineClients[i].socketId, recvBuff, MSG_LEN + 1, 0) < 0) {
+                        if (recv(onlineClients[i].socketId, recvBuff, PACKET_MAX_SIZE, 0) < 0) {
                             closesocket(onlineClients[i].socketId);
                             onlineClients[i].socketId = 0;
                             // TO-DO: Clean other variables
@@ -192,10 +203,12 @@ void app(int port)
                         }
                     } 
                 }
+
             }
 
         } else if (rtOpt == 0) {
             /* No connection */
+
         } else {
             /* Exception on the port */
             consoleLog("Error on the port");
@@ -203,6 +216,7 @@ void app(int port)
             consoleLog("Shutting down the server...");
             WSACleanup();
             exit(EXIT_FAILURE);
+
         }
 
         /* Avoid busy waiting */

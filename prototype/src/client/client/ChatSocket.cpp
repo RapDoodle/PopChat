@@ -52,7 +52,10 @@ string clientStartup(string ip, int port)
 int packetSend(string content)
 {
     string packet = packetWrapper(content);
-    return send(sock, packet.c_str(), packet.length() + 1, 0);
+    if (active)
+        return send(sock, packet.c_str(), packet.length() + 1, 0);
+    else
+        return -1;
 }
 
 bool isActive() {
@@ -72,6 +75,7 @@ string recvMsg()
         errCount++;
         if (errCount >= MAX_ATTEMP) {
             active = false;
+            closesocket(sock);
             WSACleanup();
             return packetWrapper(PACKET_TYPE_ERROR " Lost connection with the server");
         }
@@ -83,6 +87,9 @@ string recvMsg()
 string sendMsg(string msg)
 {
     int msgLen = msg.size();
+
+    if (!active)
+        return "You are not connected to any server";
 
     if (msgLen <= 0)
         return "";
