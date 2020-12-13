@@ -27,12 +27,13 @@ int dbInit()
 		consoleLog("Sucessfully connected to MySQL server");
 	}
 
-	string initQuries[2] = {
-		"CREATE TABLE IF NOT EXISTS session(session_id INT AUTO_INCREMENT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (session_id));",
-		"CREATE TABLE IF NOT EXISTS message(message_id INT AUTO_INCREMENT, session_id INT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, content VARCHAR(140), PRIMARY KEY (message_id), FOREIGN KEY (session_id) REFERENCES `session`(session_id));"
+	string initQuries[3] = {
+		"CREATE TABLE IF NOT EXISTS chat_session(session_id INT AUTO_INCREMENT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (session_id));",
+		"CREATE TABLE IF NOT EXISTS socket_session(session_id INT AUTO_INCREMENT, nickname VARCHAR(24), ip VARCHAR(39), created_at DATETIME DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (session_id));",
+		"CREATE TABLE IF NOT EXISTS message(message_id INT AUTO_INCREMENT, chat_session_id INT, socket_session_id INT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, content VARCHAR(140), PRIMARY KEY (message_id), FOREIGN KEY (chat_session_id) REFERENCES chat_session(session_id), FOREIGN KEY (socket_session_id) REFERENCES socket_session(session_id));"
 	};
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		if (executeQuery(initQuries[i], false) != 0) {
 			consoleLog("Error verifying database");
 			return -1;
@@ -52,18 +53,29 @@ int executeQuery(string query, bool isSelect)
 	return queryRet;
 }
 
-int createSession()
+int createChatSession()
 {
 	/* Return value: the session id */
-	executeQuery("INSERT INTO session VALUES ();", false);
+	executeQuery("INSERT INTO chat_session VALUES ();", false);
 	executeQuery("SELECT LAST_INSERT_ID();", true);
 	int sessionId = safeToInt(mysql_fetch_row(queryResult)[0]);
 	return sessionId;
 }
 
-int saveMessage(int session_id, string msg)
+int createSocketSession(string ip, string nickName)
 {
-	string query = "INSERT INTO message (session_id, content) VALUES (" + to_string(session_id) + ", \"" + msg + "\");";
-	cout << query << endl;
+	/* Return value: the session id */
+	string query = "INSERT INTO socket_session (nickname, ip) VALUES ('" + 
+		safeToSQL(nickName) + "', '" + safeToSQL(ip) + "');";
+	executeQuery(query, false);
+	executeQuery("SELECT LAST_INSERT_ID();", true);
+	int sessionId = safeToInt(mysql_fetch_row(queryResult)[0]);
+	return sessionId;
+}
+
+int saveMessage(int chat_session_id, int socket_session_id, string msg)
+{
+	string query = "INSERT INTO message(chat_session_id, socket_session_id, content) VALUES (" +
+		to_string(chat_session_id) + ",\'" + to_string(socket_session_id) + "\', \'" + safeToSQL(msg) + "\');";
 	return executeQuery(query, false);
 }

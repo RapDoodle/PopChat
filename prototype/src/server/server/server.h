@@ -1,8 +1,6 @@
 #pragma once
 #include "const.h"
 
-#define SRV_VERSION "1.0"
-
 #ifndef GLOBAL_ONLINE_CLIENTS
 #define GLOBAL_ONLINE_CLIENTS
 extern struct Client onlineClients[CON_CLIENTS];
@@ -17,8 +15,10 @@ extern struct Room rooms[MAX_ROOMS];
 void app(int port);
 
 struct Client{
+	string ip;
 	int socketId = 0;
 	int roomId = NULL;
+	int socketSessionId = -1;
 	int status = 0;
 	string nickName = "";
 };
