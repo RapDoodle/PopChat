@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="db.cpp" />
     <ClCompile Include="packetHandler.cpp" />
     <ClCompile Include="protocol.cpp" />
     <ClCompile Include="room.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="const.h" />
+    <ClInclude Include="db.h" />
     <ClInclude Include="packetHandler.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="room.h" />

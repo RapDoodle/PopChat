@@ -25,5 +25,6 @@ struct Client{
 
 struct Room {
 	int roomId = NULL;
+	int sessionId = -1;
 	string roomPassword;
 };

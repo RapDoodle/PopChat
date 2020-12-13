@@ -7,6 +7,7 @@ using namespace std;
 #include <iostream>
 #include <winsock2.h>
 
+#include "db.h"
 #include "room.h"
 #include "utils.h"
 #include "const.h"
@@ -44,6 +45,8 @@ int main(int argc, char** argv)
         cout << argv[1];
         port = atoi(argv[1]);
     }
+
+    dbInit();
 
     /* Call the initialize routine */
     app(port);
