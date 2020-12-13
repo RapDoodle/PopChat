@@ -11,6 +11,11 @@ extern struct Client onlineClients[CON_CLIENTS];
 extern struct Room rooms[MAX_ROOMS];
 #endif
 
+#define OFFLINE		0
+#define CONNECTED	1
+#define CREATED		2
+#define JOINING		3
+#define JOINED		4
 
 void app(int port);
 
@@ -19,7 +24,7 @@ struct Client{
 	int socketId = 0;
 	int roomId = NULL;
 	int socketSessionId = -1;
-	int status = 0;
+	int status = OFFLINE;
 	string nickName = "";
 };
 

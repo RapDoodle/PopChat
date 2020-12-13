@@ -1,4 +1,5 @@
 #include "Protocol.h"
+#include "utils.h"
 #include "MessageBox.h"
 #include "ChatSocket.h"
 #include "EntranceForm.h"
@@ -41,11 +42,24 @@ void EntranceForm::btnJoinHandler()
 		}
 
 		string packet = recvMsg();
-		int type = universalVerifier(packet, false);
+		int type = universalVerifier(&packet, false);
+		string roomId, nickName;
 
-		msgBoxInfo(QString::fromStdString(packet));
+		if (type == safeToInt(PACKET_TYPE_ADMITTED)) {
+			roomId = nextParam(&packet);
+			nickName = nextParam(&packet);
 
-		toChatForm(20201212);
+		} else if (type == safeToInt(PACKET_TYPE_FAILED)) {
+			msgBoxCritical(QString::fromStdString(packet));
+			return;
+
+		} else {
+			msgBoxCritical("Unknown error");
+			return;
+
+		}
+
+		toChatForm(QString::fromStdString(roomId));
 	}
 }
 
@@ -66,18 +80,29 @@ void EntranceForm::btnCreateHandler()
 		int res = packetSend(PACKET_TYPE_CREATE_ROOM " " +
 			password.toStdString() + " " + nickName.toStdString());
 
-		if (res == -1) {
-			msgBoxCritical("Netowrk error");
+		string packet = recvMsg();
+		int type = universalVerifier(&packet, false);
+		string roomId, nickName;
+
+		if (type == safeToInt(PACKET_TYPE_ADMITTED)) {
+			roomId = nextParam(&packet);
+			nickName = nextParam(&packet);
+
+		} else if (type == safeToInt(PACKET_TYPE_FAILED)) {
+			msgBoxCritical(QString::fromStdString(packet));
+			return;
+		} else {
+			msgBoxCritical("Unknown error");
 			return;
 		}
 
-		toChatForm(20201212);
+		toChatForm(QString::fromStdString(roomId));
 	}
 }
 
-void EntranceForm::toChatForm(int roomID) {
+void EntranceForm::toChatForm(QString roomID) {
 	room = new ChatForm;
-	room->setWindowTitle("Chat Room: " + QString::number(roomID, 10));
+	room->setWindowTitle("Pop Chat [Chat Room: " + roomID + "]");
 	room->show();
 	hide();
 }

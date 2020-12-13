@@ -1,16 +1,52 @@
+#include "utils.h"
+#include "Protocol.h"
+#include "RecvThread.h"
+#include "MessageBox.h"
+#include "ChatSocket.h"
 #include "ChatForm.h"
 #include <QMessageBox>
 #include <QCloseEvent>
+
+#define MAX_WAIT_ATTEMPT 5
 
 ChatForm::ChatForm(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+
+	packetSend(PACKET_TYPE_JOINED);
+	
+	bool success = false;
+
+	for (int i = 0; i < MAX_WAIT_ATTEMPT; i++) {
+		string packet = recvMsg();
+		int type = universalVerifier(&packet, false);
+
+		if (type < 0) {
+			break;
+
+		} else {
+			if (to_string(type) == PACKET_TYPE_SERVER_SEND) {
+                success = true;
+				ui.messages->append(QString::fromStdString(packet));
+				recvThread = new RecvThread(this);
+				recvThread->start();
+			}
+            break;
+
+		}
+	}
+    
+    if (!success) {
+        msgBoxCritical("Failed to connect. Please try again later.");
+    }
+	
+
 }
 
 ChatForm::~ChatForm()
 {
-
+	
 }
 
 void ChatForm::closeEvent(QCloseEvent* event)
@@ -26,4 +62,57 @@ void ChatForm::closeEvent(QCloseEvent* event)
 
 	/* Code below: before exiting the window */
 	
+}
+
+void ChatForm::onMsgRecv(QString msg)
+{
+    string srchStr = msg.toStdString();
+
+    /* The string for searching (will be modified) */
+    string version = nextParam(&srchStr);
+
+    if (version != PROTOCOL_VERSION) {
+        return;  // Ignore the message
+    }
+
+    string checkSum = nextParam(&srchStr);
+    string calCheckSum = to_string(calculateCheckSum(srchStr));
+    if (checkSum != calCheckSum) {
+        // TO-DO: Request for retransmission
+        return;  // Error packet
+    }
+
+    string type = nextParam(&srchStr);
+
+    /* Route different packets to different routine */
+    if (type == PACKET_TYPE_PING) {
+        /* Ping */
+        packetSend(PACKET_TYPE_PONG);
+
+    } else if (type == PACKET_TYPE_SUCCESS) {
+        /* Success opration */
+        if (srchStr == "Connected")
+            return;  // Ignore the connected message
+
+    } else if (type == PACKET_TYPE_FAILED) {
+        /* Failed operation */
+
+    } else if (type == PACKET_TYPE_VALIDATION_ERROR) {
+        /* Packet validation error */
+
+    } else if (type == PACKET_TYPE_ERROR) {
+        /* Error */
+
+    } else if (type == PACKET_TYPE_SERVER_SEND) {
+        /* Data from server */
+        string nickName = nextParam(&srchStr);
+        ui.messages->append(QString::fromStdString("<" + nickName + ">" + srchStr).trimmed());
+        return;
+    } else {
+        /* Must do nothing to avoid infinite loop */
+        return;
+
+    }
+
+    ui.messages->append(QString::fromStdString(srchStr).trimmed());
 }

@@ -192,8 +192,12 @@ void app(int port)
                     if (FD_ISSET(onlineClients[i].socketId, &fr)) {
                         if (recv(onlineClients[i].socketId, recvBuff, PACKET_MAX_SIZE, 0) < 0) {
                             closesocket(onlineClients[i].socketId);
+                            consoleLog("Socket " + to_string(onlineClients[i].socketId) + " disconnected");
                             onlineClients[i].socketId = 0;
-                            // TO-DO: Clean other variables
+                            onlineClients[i].roomId = NULL;
+                            onlineClients[i].socketSessionId = -1;
+                            onlineClients[i].status = OFFLINE;
+                            onlineClients[i].nickName = "";
                         } else {
                             /* Handle the new message from the client */
                             if (strlen(recvBuff) > 0) {

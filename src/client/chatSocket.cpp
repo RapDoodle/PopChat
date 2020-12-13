@@ -54,43 +54,37 @@ int clientStartup(string ip, int port)
         return -1;
     }
 
-    if (universalVerifier(recvMsg(), true) < 0)
+    string packet = recvMsg();
+    int type = universalVerifier(&packet, true);
+    if (type != safeToInt(PACKET_TYPE_SUCCESS) || nextParam(&packet) != "Connected") {
+        closesocket(sock);
+        WSACleanup();
+        msgBoxCritical("The connection is not established. Please try again later.");
         return -1;
-        
+    }
+
     active = true;
     return 0;
 }
 
-int universalVerifier(string packet, bool showMsgBox) {
-    string version = nextParam(&packet);
+int universalVerifier(string* packet, bool showMsgBox) {
+    string version = nextParam(packet);
 
     if (version != PROTOCOL_VERSION) {
-        closesocket(sock);
-        WSACleanup();
         if (showMsgBox)
             msgBoxCritical("Unable to establish communication with the server. Please use the version of PopChat supported by the server.");
         return -1;
     }
-    string checkSum = nextParam(&packet);
+    string checkSum = nextParam(packet);
 
-    string calCheckSum = to_string(calculateCheckSum(packet));
+    string calCheckSum = to_string(calculateCheckSum(*packet));
     if (checkSum != calCheckSum) {
-        closesocket(sock);
-        WSACleanup();
         if (showMsgBox)
             msgBoxCritical("Packet error. Please try again later.");
         return -1;
     }
 
-    string type = nextParam(&packet);
-
-    if (type != PACKET_TYPE_SUCCESS || nextParam(&packet) != "Connected") {
-        closesocket(sock);
-        WSACleanup();
-        if (showMsgBox)
-            msgBoxCritical("The connection is not established. Please try again later.");
-        return -1;
-    }
+    string type = nextParam(packet);
 
     return safeToInt(type);
 }
