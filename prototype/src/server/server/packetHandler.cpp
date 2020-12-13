@@ -7,6 +7,7 @@
 #include "server.h"
 #include "utils.h"
 #include "room.h"
+#include "db.h"
 
 using namespace std;
 
@@ -43,6 +44,7 @@ int packetHandler(struct Client* client, char* buff)
     if (type == PACKET_TYPE_PING) {
         /* Ping */
         packetSend(client->socketId, PACKET_TYPE_PONG);
+
     } else if (type == PACKET_TYPE_CREATE_ROOM) {
         /* Create room */
         if (client->roomId != NULL) {
@@ -57,6 +59,7 @@ int packetHandler(struct Client* client, char* buff)
         client->nickName = nickName;
         packetSend(client->socketId, PACKET_TYPE_SUCCESS " Joined successfully. Room number: " + 
             to_string(roomId) + ". Room password: " + pwd);
+
     } else if (type == PACKET_TYPE_JOIN_ROOM) {
         /* Join the room */
         string roomId = nextParam(&srchStr);
@@ -88,10 +91,12 @@ int packetHandler(struct Client* client, char* buff)
             packetSend(client->socketId, PACKET_TYPE_ERROR " Room number not found. Consider creating one?");
             return -1;
         }
+
     } else if (type == PACKET_TYPE_LEAVE_ROOM) {
         client->roomId = NULL;
         client->nickName = "";
         packetSend(client->socketId, PACKET_TYPE_SUCCESS " You've left the room successfully");
+
     } else if (type == PACKET_TYPE_CLIENT_SEND) {
         if (client->roomId == NULL) {
             packetSend(client->socketId, PACKET_TYPE_ERROR " You are not in any room");
@@ -105,10 +110,21 @@ int packetHandler(struct Client* client, char* buff)
                 packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickName + "> " + srchStr);
             }
         }
+
+        for (int i = 0; i < MAX_ROOMS; i++) {
+            if (rooms[i].roomId == client->roomId) {
+                int sessionId = rooms[i].sessionId;
+                if (sessionId != -1)
+                    saveMessage(sessionId, "<" + client->nickName + "> " + srchStr);
+            }
+        }
+
         packetSend(client->socketId, PACKET_TYPE_SERVER_ACK);
+
     } else {
         packetSend(client->socketId, PACKET_TYPE_ERROR);
         return -1;
+
     }
 
     return 0;

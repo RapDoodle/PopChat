@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <ctime>
 
+#include "db.h"
 #include "room.h"
 #include "const.h"
 #include "server.h"
@@ -15,6 +16,7 @@ int createRoom(string roomPassword)
 			srand(time(NULL));
 			rooms[i].roomId = rand() % 100000 + 10000;
 			rooms[i].roomPassword = roomPassword;
+			rooms[i].sessionId = createSession();
 			return rooms[i].roomId;
 		}
 	}
