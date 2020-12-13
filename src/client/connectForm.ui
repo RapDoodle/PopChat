@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>connectFormClass</class>
- <widget class="QWidget" name="connectFormClass">
+ <class>ConnectFormClass</class>
+ <widget class="QWidget" name="ConnectFormClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -120,6 +120,9 @@
          <pointsize>9</pointsize>
         </font>
        </property>
+       <property name="text">
+        <string>127.0.0.1</string>
+       </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
@@ -212,6 +215,9 @@
        </property>
        <property name="autoFillBackground">
         <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>8000</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

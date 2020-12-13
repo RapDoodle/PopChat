@@ -27,61 +27,73 @@
     <QtRcc Include="connectForm.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtMoc Include="connectForm.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="connectForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entranceForm.cpp">
+    <ClCompile Include="ChatForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="chatForm.cpp">
+    <ClCompile Include="ChatSocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="chatSocket.cpp">
+    <ClCompile Include="ConnectForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="protocol.cpp">
+    <ClCompile Include="EntranceForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="recvThreadcpp.cpp">
+    <ClCompile Include="Protocol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RecvThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="connectForm.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="entranceForm.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="chatForm.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="entranceForm.h">
+    <QtMoc Include="RecvThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="chatForm.h">
+    <QtMoc Include="ChatForm.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ConnectForm.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="EntranceForm.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="recvThread.h">
+    <ClInclude Include="ChatSocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="chatSocket.h">
+    <ClInclude Include="Protocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="protocol.h">
+    <ClInclude Include="MessageBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="ChatForm.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ConnectForm.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="EntranceForm.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

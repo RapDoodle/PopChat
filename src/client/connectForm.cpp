@@ -1,8 +1,12 @@
-#include "connectForm.h"
-#include "entranceForm.h"
-#include <qmessagebox.h>
+#include <QMessageBox>
 
-connectForm::connectForm(QWidget *parent)
+#include "MessageBox.h"
+#include "ChatSocket.h"
+#include "ConnectForm.h"
+#include "EntranceForm.h"
+
+
+ConnectForm::ConnectForm(QWidget *parent)
     : QWidget(parent)
 {
     setWindowTitle("Connect");
@@ -11,7 +15,7 @@ connectForm::connectForm(QWidget *parent)
     connect(ui.connectButton, SIGNAL(clicked()), this, SLOT(btnLoginHandler()));
 }
 
-void connectForm::btnLoginHandler() 
+void ConnectForm::btnLoginHandler() 
 {
     QString host = ui.hostField->text();
     QString port = ui.portField->text();
@@ -19,9 +23,11 @@ void connectForm::btnLoginHandler()
         QMessageBox::warning(this, "Invalid Input", "Host and port number cannot be empty.");
     else {
         /* Connect to the server */
+        if (clientStartup(host.toStdString().c_str(), atoi(port.toStdString().c_str())) < 0)
+            return;
 
         /*  */
-        ef = new entranceForm;
+        ef = new EntranceForm;
         ef->setWindowTitle("Enter a Chat Room");
         ef->show();
         hide();
@@ -29,7 +35,7 @@ void connectForm::btnLoginHandler()
 }
 
 
-void connectForm::toHistory() 
+void ConnectForm::toHistory() 
 {
 
 

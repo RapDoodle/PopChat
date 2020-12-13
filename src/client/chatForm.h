@@ -1,17 +1,18 @@
 #pragma once
 
 #include <QWidget>
-#include "ui_chatForm.h"
+#include <QCloseEvent>
+#include "ui_ChatForm.h"
 
-class chatForm : public QWidget
+class ChatForm : public QWidget
 {
 	Q_OBJECT
 
-public:
-	chatForm(QWidget *parent = Q_NULLPTR);
-	~chatForm();
+	public:
+		ChatForm(QWidget *parent = Q_NULLPTR);
+		~ChatForm();
 
-private:
-	Ui::chatForm ui;
-	// void closeEvent(QCloseEvent* event);
+	private:
+		Ui::ChatFormClass ui;
+		void closeEvent(QCloseEvent* event);
 };

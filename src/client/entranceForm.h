@@ -1,23 +1,24 @@
 #pragma once
 
 #include <QWidget>
-#include "ui_entranceForm.h"
-#include "chatForm.h"
 
-class entranceForm : public QWidget
+#include "ui_EntranceForm.h"
+#include "ChatForm.h"
+
+class EntranceForm : public QWidget
 {
 	Q_OBJECT
 
-public:
-	entranceForm(QWidget *parent = Q_NULLPTR);
-	~entranceForm();
+	public:
+		EntranceForm(QWidget *parent = Q_NULLPTR);
+		~EntranceForm();
 
-private slots:
-	void checkCreate();
-	void checkJoin();
+	private slots:
+		void btnCreateHandler();
+		void btnJoinHandler();
 
-private:
-	Ui::entranceFormClass ui;
-	chatForm* room;
-	void tochatForm(int roomID);
+	private:
+		Ui::EntranceFormClass ui;
+		ChatForm* room;
+		void toChatForm(int roomID);
 };
