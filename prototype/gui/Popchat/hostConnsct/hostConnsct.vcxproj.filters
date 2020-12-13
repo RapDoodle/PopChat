@@ -24,44 +24,44 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="hostConnsct.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtMoc Include="hostConnsct.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="hostConnsct.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="roomEnter.cpp">
+    <ClCompile Include="connectForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="chatRoom.cpp">
+    <ClCompile Include="chatForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entranceForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="hostConnsct.ui">
+    <QtUic Include="connectForm.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="roomEnter.ui">
+    <QtUic Include="entranceForm.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="chatRoom.ui">
+    <QtUic Include="chatForm.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="roomEnter.h">
+    <QtMoc Include="connectForm.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="chatRoom.h">
+    <QtMoc Include="chatForm.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="entranceForm.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resource.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>

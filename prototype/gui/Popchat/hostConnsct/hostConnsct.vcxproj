@@ -16,6 +16,7 @@
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">10.0.18362.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">10.0.18362.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+    <ProjectName>gui</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
@@ -86,21 +87,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="chatRoom.cpp" />
-    <ClCompile Include="roomEnter.cpp" />
-    <QtRcc Include="hostConnsct.qrc" />
-    <QtUic Include="chatRoom.ui" />
-    <QtUic Include="hostConnsct.ui" />
-    <QtMoc Include="hostConnsct.h" />
-    <ClCompile Include="hostConnsct.cpp" />
+    <ClCompile Include="chatForm.cpp" />
+    <ClCompile Include="entranceForm.cpp" />
+    <QtRcc Include="resource.qrc" />
+    <QtUic Include="chatForm.ui" />
+    <QtUic Include="connectForm.ui" />
+    <QtMoc Include="connectForm.h" />
+    <ClCompile Include="connectForm.cpp" />
     <ClCompile Include="main.cpp" />
-    <QtUic Include="roomEnter.ui" />
+    <QtUic Include="entranceForm.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="roomEnter.h" />
+    <QtMoc Include="entranceForm.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="chatRoom.h" />
+    <QtMoc Include="chatForm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
