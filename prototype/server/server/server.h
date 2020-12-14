@@ -1,5 +1,19 @@
 #pragma once
+
+#include <ctime>
+#include <chrono>
+#include <string>
+#include <iomanip>
+#include <iostream>
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+
+#include "db.h"
+#include "room.h"
+#include "utils.h"
 #include "const.h"
+#include "protocol.h"
+#include "packetHandler.h"
 
 #ifndef GLOBAL_ONLINE_CLIENTS
 #define GLOBAL_ONLINE_CLIENTS

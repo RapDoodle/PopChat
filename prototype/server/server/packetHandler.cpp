@@ -55,6 +55,13 @@ int packetHandler(struct Client* client, char* buff)
         string pwd = nextParam(&srchStr);
         int roomId = createRoom(pwd);
         string nickname = nextParam(&srchStr);
+
+        /* Make sure the user does not use the bot's name */
+        if (nickname == BOT_NAME) {
+            packetSend(client->socketId, PACKET_TYPE_FAILED " The nickname already exists in the room. Please pick another name.");
+            return -1;
+        }
+
         client->roomId = roomId;
         client->nickname = nickname;
         client->socketSessionId = createSocketSession(client->ip, client->nickname);
@@ -72,6 +79,7 @@ int packetHandler(struct Client* client, char* buff)
             packetSend(client->socketId, PACKET_TYPE_FAILED " You've already joined another room " +
                 to_string(client->roomId));
             return -1;
+
         }
         
         bool found = false;
@@ -84,26 +92,42 @@ int packetHandler(struct Client* client, char* buff)
                     packetSend(client->socketId, PACKET_TYPE_FAILED " Incorrect password");
                     return -1;
                 }
-                client->roomId = rooms[i].roomId;
+
+                /* Check for name collision */
                 string nickname = nextParam(&srchStr);
+                if (checkNameCollision(rooms[i].roomId, nickname)) {
+                    packetSend(client->socketId, PACKET_TYPE_FAILED " The nickname already exists in the room. Please pick another name.");
+                    return -1;
+                }
+
+                /* Admitted procedure */
+                client->roomId = rooms[i].roomId;
                 client->nickname = nickname;
                 client->status = JOINING;
                 client->socketSessionId = createSocketSession(client->ip, client->nickname);
                 packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickname);
+
             }
         }
 
         if (!found) {
             packetSend(client->socketId, PACKET_TYPE_FAILED " Room number not found. Consider creating one?");
             return -1;
+
         }
 
     } else if (type == PACKET_TYPE_LEAVE_ROOM) {
+        string nickname = client->nickname;
+        int roomId = client->roomId;
         client->roomId = NULL;
         client->nickname = "";
-        packetSend(client->socketId, PACKET_TYPE_SUCCESS " You've left the room successfully");
+        // packetSend(client->socketId, PACKET_TYPE_SUCCESS " You've left the room successfully");
+        int clientCount = groupSend(roomId, BOT_NAME, client->nickname + " has left the chat.");
+        if (clientCount <= 0)
+            countOrFreeRoom(roomId);
 
     } else if (type == PACKET_TYPE_JOINED) {
+        cout << "hi" << endl;
         if (client->status == CREATED) {
             for (int i = 0; i < MAX_ROOMS; i++) {
                 if (rooms[i].roomId == client->roomId) {
@@ -113,12 +137,15 @@ int packetHandler(struct Client* client, char* buff)
                 }
             }
             client->status = JOINED;
+
         } else if (client->status == JOINING) {
             packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot You've joined room " + to_string(client->roomId));
             client->status = JOINED;
+
         } else {
             packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot Welcome back to room " + to_string(client->roomId));
             client->status = JOINED;
+
         }
 
     } else if (type == PACKET_TYPE_CLIENT_SEND) {
@@ -126,22 +153,15 @@ int packetHandler(struct Client* client, char* buff)
             packetSend(client->socketId, PACKET_TYPE_ERROR " You are not in any room");
             return -1;
         }
-        for (int i = 0; i < CON_CLIENTS; i++) {
-            /*if (onlineClients[i].socketId != client->socketId && onlineClients[i].roomId == client->roomId) {
-                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickname + "> " + srchStr);
-            }*/
-            if (onlineClients[i].roomId == client->roomId) {
-                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " " + client->nickname + " " + srchStr);
-            }
-        }
 
-        // packetSend(client->socketId, PACKET_TYPE_SERVER_ACK);
+        groupSend(client->roomId, client->nickname, srchStr);
 
         for (int i = 0; i < MAX_ROOMS; i++) {
             if (rooms[i].roomId == client->roomId) {
                 int chatSessionId = rooms[i].sessionId;
                 if (chatSessionId != -1)
                     saveMessage(chatSessionId, client->socketSessionId, srchStr);
+                break;
             }
         }
 

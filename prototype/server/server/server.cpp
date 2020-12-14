@@ -1,20 +1,6 @@
 using namespace std;
 
-#include <ctime>
-#include <chrono>
-#include <string>
-#include <iomanip>
-#include <iostream>
-#include <winsock2.h>
-#include <Ws2tcpip.h>
-
-#include "db.h"
-#include "room.h"
-#include "utils.h"
-#include "const.h"
 #include "server.h"
-#include "protocol.h"
-#include "packetHandler.h"
 
 struct sockaddr_in srv;
 
@@ -116,9 +102,11 @@ void app(int port)
         consoleLog("Unable to start listening on port " + to_string(port));
         WSACleanup();
         exit(EXIT_FAILURE);
+
     } else {
         consoleLog("Server started successfully");
         consoleLog("Currently listening on port " + to_string(port));
+
     }
 
     nMaxFd = mainSock;
@@ -176,7 +164,7 @@ void app(int port)
                         if (onlineClients[i].socketId == 0) {
                             onlineClients[i].socketId = currSock;
                             onlineClients[i].ip = ip;
-                            packetSend(currSock, "04 Connected");
+                            packetSend(currSock, PACKET_TYPE_SUCCESS " Connected");
                             break;
                         }
                     }
@@ -191,6 +179,8 @@ void app(int port)
 
                     if (FD_ISSET(onlineClients[i].socketId, &fr)) {
                         if (recv(onlineClients[i].socketId, recvBuff, PACKET_MAX_SIZE, 0) < 0) {
+                            int roomId = onlineClients[i].roomId;
+                            string nickname = onlineClients[i].nickname;
                             closesocket(onlineClients[i].socketId);
                             consoleLog("Socket " + to_string(onlineClients[i].socketId) + " disconnected");
                             onlineClients[i].socketId = 0;
@@ -198,11 +188,17 @@ void app(int port)
                             onlineClients[i].socketSessionId = -1;
                             onlineClients[i].status = OFFLINE;
                             onlineClients[i].nickname = "";
+                            int count = groupSend(roomId, BOT_NAME, nickname + " has disconnected.");
+                            if (count <= 0) {
+                                countOrFreeRoom(roomId);
+                            }
+
                         } else {
                             /* Handle the new message from the client */
                             if (strlen(recvBuff) > 0) {
-                                cout << "[" << onlineClients[i].socketId << "][" << onlineClients[i].roomId << "][" << onlineClients[i].nickname << "]: " << recvBuff << endl;
+                                // cout << "[" << onlineClients[i].socketId << "][" << onlineClients[i].roomId << "][" << onlineClients[i].nickname << "]: " << recvBuff << endl;
                                 packetHandler(&onlineClients[i], recvBuff);
+
                             }
                         }
                     } 

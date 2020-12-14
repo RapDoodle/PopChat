@@ -155,11 +155,15 @@ void ChatForm::renderMsg(QString nickname, QString content)
         ui.messages->insertPlainText(content);
         ui.messages->insertHtml("</p><p align='left' style='margin:0;'></p>");
     } else {
-        ui.messages->insertHtml(QStringLiteral("<br><p align='right' style='margin:0;'><b>") + nickname
-            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("</p><p align='right' style='margin:0;'>"));
+        ui.messages->insertHtml(QStringLiteral("<br><p align='right' style='margin:0;'>") + 
+            QString::fromStdString(getCurrentTimeString()) + QStringLiteral(" <b>") + nickname +
+            QStringLiteral("</b></p><p align='right' style='margin:0;'>"));
         ui.messages->insertPlainText(content);
         ui.messages->insertHtml("</p><p align='right' style='margin:0;'></p>");
     }
     ui.messages->verticalScrollBar()->setValue(ui.messages->verticalScrollBar()->maximum());
+
+    /* Save the message to the local drive */
+    insertMessage(localSessionId, nickname.toStdString(), content.toStdString());
     
 }
