@@ -21,7 +21,7 @@ void RecvThread::run()
 
         if (msg.size() > 0) {
             QString qsmsg = QString::fromStdString(msg);
-            emit msgRecv(qsmsg.trimmed());
+            emit msgRecvEvent(qsmsg.trimmed());
         }
     }
 }

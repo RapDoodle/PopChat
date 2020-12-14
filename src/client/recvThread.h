@@ -11,5 +11,5 @@ public:
     void run();
 
 signals:
-    void msgRecv(QString);
+    void msgRecvEvent(QString);
 };

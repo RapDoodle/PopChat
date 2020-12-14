@@ -87,6 +87,7 @@ int packetHandler(struct Client* client, char* buff)
                 client->roomId = rooms[i].roomId;
                 string nickName = nextParam(&srchStr);
                 client->nickName = nickName;
+                client->status = JOINING;
                 client->socketSessionId = createSocketSession(client->ip, client->nickName);
                 packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickName);
             }
@@ -130,7 +131,7 @@ int packetHandler(struct Client* client, char* buff)
                 packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickName + "> " + srchStr);
             }*/
             if (onlineClients[i].roomId == client->roomId) {
-                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickName + "> " + srchStr);
+                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " " + client->nickName + " " + srchStr);
             }
         }
 

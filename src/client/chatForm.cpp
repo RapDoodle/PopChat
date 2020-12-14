@@ -4,6 +4,7 @@
 #include "MessageBox.h"
 #include "ChatSocket.h"
 #include "ChatForm.h"
+#include "ConnectForm.h"
 #include <QMessageBox>
 #include <QCloseEvent>
 
@@ -13,6 +14,7 @@ ChatForm::ChatForm(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+    connect(ui.sendBtn, SIGNAL(clicked()), this, SLOT(sendBtnClicked()));
 
 	packetSend(PACKET_TYPE_JOINED);
 	
@@ -31,6 +33,7 @@ ChatForm::ChatForm(QWidget *parent)
 				ui.messages->append(QString::fromStdString(packet));
 				recvThread = new RecvThread(this);
 				recvThread->start();
+                connect(recvThread, SIGNAL(msgRecvEvent(QString)), this, SLOT(onMsgRecv(QString)));
 			}
             break;
 
@@ -40,13 +43,24 @@ ChatForm::ChatForm(QWidget *parent)
     if (!success) {
         msgBoxCritical("Failed to connect. Please try again later.");
     }
-	
 
 }
 
 ChatForm::~ChatForm()
 {
-	
+    recvThread->terminate();
+    /* TO-DO: Reshow the parent window */
+}
+
+void ChatForm::sendBtnClicked()
+{
+    if (ui.messageField->toPlainText().length() > 0) {
+        QString retMsg = QString::fromStdString(sendMsg(ui.messageField->toPlainText().toStdString()));
+
+        if (retMsg.length() > 0)
+            ui.messages->append(retMsg);
+        ui.messageField->clear();
+    }
 }
 
 void ChatForm::closeEvent(QCloseEvent* event)
@@ -56,8 +70,10 @@ void ChatForm::closeEvent(QCloseEvent* event)
 		QMessageBox::Yes | QMessageBox::No);
 	if (button == QMessageBox::No) {
 		event->ignore();
+
 	} else if (button == QMessageBox::Yes) {
-		event->accept(); 
+		event->accept();
+
 	}
 
 	/* Code below: before exiting the window */

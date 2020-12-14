@@ -3,6 +3,7 @@
 #include <QMutex>
 #include <QWidget>
 #include <QCloseEvent>
+#include <QKeyEvent>
 #include "ui_ChatForm.h"
 
 #include "RecvThread.h"
@@ -19,7 +20,11 @@ class ChatForm : public QWidget
 	public slots:
 		void onMsgRecv(QString);
 
+	private slots:
+		void sendBtnClicked();
+
 	private:
 		Ui::ChatFormClass ui;
 		void closeEvent(QCloseEvent* event);
+
 };

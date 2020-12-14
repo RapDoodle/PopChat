@@ -37,7 +37,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabJoin">
       <attribute name="title">
@@ -101,8 +101,8 @@
             <font>
              <family>Segoe UI</family>
              <pointsize>9</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -188,8 +188,8 @@
             <font>
              <family>Segoe UI</family>
              <pointsize>9</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -269,9 +269,12 @@
             <font>
              <family>Segoe UI</family>
              <pointsize>9</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
            </property>
           </widget>
          </item>
@@ -507,6 +510,9 @@
              <weight>50</weight>
              <bold>false</bold>
             </font>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
            </property>
           </widget>
          </item>

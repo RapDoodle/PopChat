@@ -56,7 +56,10 @@ int clientStartup(string ip, int port)
 
     string packet = recvMsg();
     int type = universalVerifier(&packet, true);
-    if (type != safeToInt(PACKET_TYPE_SUCCESS) || nextParam(&packet) != "Connected") {
+
+    if (type < 0) {
+        return -1;
+    } else if (type != safeToInt(PACKET_TYPE_SUCCESS) || nextParam(&packet) != "Connected") {
         closesocket(sock);
         WSACleanup();
         msgBoxCritical("The connection is not established. Please try again later.");
@@ -121,7 +124,6 @@ string recvMsg()
         }
         return "";
     }
-
 }
 
 string sendMsg(string msg)
