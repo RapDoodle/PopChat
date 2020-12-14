@@ -197,11 +197,11 @@ void app(int port)
                             onlineClients[i].roomId = NULL;
                             onlineClients[i].socketSessionId = -1;
                             onlineClients[i].status = OFFLINE;
-                            onlineClients[i].nickName = "";
+                            onlineClients[i].nickname = "";
                         } else {
                             /* Handle the new message from the client */
                             if (strlen(recvBuff) > 0) {
-                                cout << "[" << onlineClients[i].socketId << "][" << onlineClients[i].roomId << "][" << onlineClients[i].nickName << "]: " << recvBuff << endl;
+                                cout << "[" << onlineClients[i].socketId << "][" << onlineClients[i].roomId << "][" << onlineClients[i].nickname << "]: " << recvBuff << endl;
                                 packetHandler(&onlineClients[i], recvBuff);
                             }
                         }

@@ -62,11 +62,11 @@ int createChatSession()
 	return sessionId;
 }
 
-int createSocketSession(string ip, string nickName)
+int createSocketSession(string ip, string nickname)
 {
 	/* Return value: the session id */
 	string query = "INSERT INTO socket_session (nickname, ip) VALUES ('" + 
-		safeToSQL(nickName) + "', '" + safeToSQL(ip) + "');";
+		safeToSQL(nickname) + "', '" + safeToSQL(ip) + "');";
 	executeQuery(query, false);
 	executeQuery("SELECT LAST_INSERT_ID();", true);
 	int sessionId = safeToInt(mysql_fetch_row(queryResult)[0]);

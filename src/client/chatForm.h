@@ -13,7 +13,7 @@ class ChatForm : public QWidget
 	Q_OBJECT
 
 	public:
-		ChatForm(QWidget *parent = Q_NULLPTR);
+		ChatForm(QWidget *parent, QString nickname, QString roomId, QString host);
 		~ChatForm();
 		RecvThread* recvThread;
 
@@ -25,6 +25,11 @@ class ChatForm : public QWidget
 
 	private:
 		Ui::ChatFormClass ui;
+		std::string nicknameStrGlobal;
+		std::string roomIdStrGlobal;
+		std::string hostStrGlobal;
+		std::string localSessionId;
 		void closeEvent(QCloseEvent* event);
+		void renderMsg(QString nickname, QString content);
 
 };

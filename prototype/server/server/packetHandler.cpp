@@ -54,13 +54,13 @@ int packetHandler(struct Client* client, char* buff)
         }
         string pwd = nextParam(&srchStr);
         int roomId = createRoom(pwd);
-        string nickName = nextParam(&srchStr);
+        string nickname = nextParam(&srchStr);
         client->roomId = roomId;
-        client->nickName = nickName;
-        client->socketSessionId = createSocketSession(client->ip, client->nickName);
+        client->nickname = nickname;
+        client->socketSessionId = createSocketSession(client->ip, client->nickname);
 
         /* Admitted procedure */
-        packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickName);
+        packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickname);
         client->status = CREATED;
         
 
@@ -85,11 +85,11 @@ int packetHandler(struct Client* client, char* buff)
                     return -1;
                 }
                 client->roomId = rooms[i].roomId;
-                string nickName = nextParam(&srchStr);
-                client->nickName = nickName;
+                string nickname = nextParam(&srchStr);
+                client->nickname = nickname;
                 client->status = JOINING;
-                client->socketSessionId = createSocketSession(client->ip, client->nickName);
-                packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickName);
+                client->socketSessionId = createSocketSession(client->ip, client->nickname);
+                packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickname);
             }
         }
 
@@ -100,7 +100,7 @@ int packetHandler(struct Client* client, char* buff)
 
     } else if (type == PACKET_TYPE_LEAVE_ROOM) {
         client->roomId = NULL;
-        client->nickName = "";
+        client->nickname = "";
         packetSend(client->socketId, PACKET_TYPE_SUCCESS " You've left the room successfully");
 
     } else if (type == PACKET_TYPE_JOINED) {
@@ -128,10 +128,10 @@ int packetHandler(struct Client* client, char* buff)
         }
         for (int i = 0; i < CON_CLIENTS; i++) {
             /*if (onlineClients[i].socketId != client->socketId && onlineClients[i].roomId == client->roomId) {
-                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickName + "> " + srchStr);
+                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " <" + client->nickname + "> " + srchStr);
             }*/
             if (onlineClients[i].roomId == client->roomId) {
-                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " " + client->nickName + " " + srchStr);
+                packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " " + client->nickname + " " + srchStr);
             }
         }
 

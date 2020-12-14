@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "db.h"
 #include "Protocol.h"
 #include "RecvThread.h"
 #include "MessageBox.h"
@@ -10,7 +11,7 @@
 
 #define MAX_WAIT_ATTEMPT 5
 
-ChatForm::ChatForm(QWidget *parent)
+ChatForm::ChatForm(QWidget *parent, QString nickname, QString roomId, QString host)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
@@ -30,7 +31,8 @@ ChatForm::ChatForm(QWidget *parent)
 		} else {
 			if (to_string(type) == PACKET_TYPE_SERVER_SEND) {
                 success = true;
-				ui.messages->append(QString::fromStdString(packet));
+                string nickname = nextParam(&packet);
+                renderMsg(QString::fromStdString(nickname), QString::fromStdString(packet));
 				recvThread = new RecvThread(this);
 				recvThread->start();
                 connect(recvThread, SIGNAL(msgRecvEvent(QString)), this, SLOT(onMsgRecv(QString)));
@@ -39,6 +41,13 @@ ChatForm::ChatForm(QWidget *parent)
 
 		}
 	}
+
+    hostStrGlobal = host.toStdString();
+    nicknameStrGlobal = nickname.toStdString();
+    roomIdStrGlobal = roomId.toStdString();
+
+    openDB();
+    localSessionId = to_string(createSession(host.toStdString()));
     
     if (!success) {
         msgBoxCritical("Failed to connect. Please try again later.");
@@ -75,7 +84,6 @@ void ChatForm::closeEvent(QCloseEvent* event)
 		event->accept();
 
 	}
-
 	/* Code below: before exiting the window */
 	
 }
@@ -121,8 +129,13 @@ void ChatForm::onMsgRecv(QString msg)
 
     } else if (type == PACKET_TYPE_SERVER_SEND) {
         /* Data from server */
-        string nickName = nextParam(&srchStr);
-        ui.messages->append(QString::fromStdString("<" + nickName + ">" + srchStr).trimmed());
+        string nickname = nextParam(&srchStr);
+        /*
+        ui.messages->insertHtml(QStringLiteral("<br><br><b>") + QString::fromStdString(nickname) 
+            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("<br>"));
+        ui.messages->insertPlainText(QString::fromStdString(srchStr).trimmed());
+        */
+        renderMsg(QString::fromStdString(nickname), QString::fromStdString(srchStr));
         return;
     } else {
         /* Must do nothing to avoid infinite loop */
@@ -131,4 +144,22 @@ void ChatForm::onMsgRecv(QString msg)
     }
 
     ui.messages->append(QString::fromStdString(srchStr).trimmed());
+}
+
+void ChatForm::renderMsg(QString nickname, QString content)
+{
+    ui.messages->moveCursor(QTextCursor::End);
+    if (nickname.toStdString() != nicknameStrGlobal) {
+        ui.messages->insertHtml(QStringLiteral("<br><p align='left' style='margin:0;'><b>") + nickname
+            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("</p><p align='left' style='margin:0;'>"));
+        ui.messages->insertPlainText(content);
+        ui.messages->insertHtml("</p><p align='left' style='margin:0;'></p>");
+    } else {
+        ui.messages->insertHtml(QStringLiteral("<br><p align='right' style='margin:0;'><b>") + nickname
+            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("</p><p align='right' style='margin:0;'>"));
+        ui.messages->insertPlainText(content);
+        ui.messages->insertHtml("</p><p align='right' style='margin:0;'></p>");
+    }
+    ui.messages->verticalScrollBar()->setValue(ui.messages->verticalScrollBar()->maximum());
+    
 }

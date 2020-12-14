@@ -25,7 +25,7 @@ struct Client{
 	int roomId = NULL;
 	int socketSessionId = -1;
 	int status = OFFLINE;
-	string nickName = "";
+	string nickname = "";
 };
 
 struct Room {

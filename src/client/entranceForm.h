@@ -12,6 +12,7 @@ class EntranceForm : public QWidget
 	public:
 		EntranceForm(QWidget *parent = Q_NULLPTR);
 		~EntranceForm();
+		std::string hostStrGlobal;
 
 	private slots:
 		void btnCreateHandler();
@@ -20,5 +21,5 @@ class EntranceForm : public QWidget
 	private:
 		Ui::EntranceFormClass ui;
 		ChatForm* room;
-		void EntranceForm::toChatForm(QString roomID);
+		void toChatForm(QString roomID, QString nickname);
 };

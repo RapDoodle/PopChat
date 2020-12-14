@@ -37,7 +37,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabJoin">
       <attribute name="title">
@@ -96,7 +96,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="MyJoinNickname_4">
+          <widget class="QLineEdit" name="joinNickname">
            <property name="font">
             <font>
              <family>Segoe UI</family>
@@ -264,7 +264,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="ExistRoomPassword_4">
+          <widget class="QLineEdit" name="joinRoomPassword">
            <property name="font">
             <font>
              <family>Segoe UI</family>
@@ -421,7 +421,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="MyNickname_4">
+          <widget class="QLineEdit" name="createNickname">
            <property name="font">
             <font>
              <family>Segoe UI</family>
@@ -502,7 +502,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="NewRoomPassword_4">
+          <widget class="QLineEdit" name="createRoomPassword">
            <property name="font">
             <font>
              <family>Segoe UI</family>

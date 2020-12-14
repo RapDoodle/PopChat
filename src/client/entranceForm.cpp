@@ -20,11 +20,11 @@ EntranceForm::~EntranceForm()
 
 void EntranceForm::btnJoinHandler() 
 {
-	QString nickName = ui.MyJoinNickname_4->text();
+	QString nickname = ui.joinNickname->text();
 	QString roomId = ui.ChatID_4->text();
-	QString password = ui.ExistRoomPassword_4->text();
+	QString password = ui.joinRoomPassword->text();
 
-	if (nickName.isEmpty() || roomId.isEmpty()) {
+	if (nickname.isEmpty() || roomId.isEmpty()) {
 		msgBoxWarning("The field for nickname, room number cannot be empty");
 
 	}  else {
@@ -33,7 +33,7 @@ void EntranceForm::btnJoinHandler()
 		int res = packetSend(PACKET_TYPE_JOIN_ROOM " " + 
 			roomId.toStdString() + " " + 
 			password.toStdString() + " " + 
-			nickName.toStdString());
+			nickname.toStdString());
 
 		if (res == -1) {
 			/* SOCKET_ERROR */
@@ -43,11 +43,13 @@ void EntranceForm::btnJoinHandler()
 
 		string packet = recvMsg();
 		int type = universalVerifier(&packet, false);
-		string roomId, nickName;
+		string roomId, nickname;
 
 		if (type == safeToInt(PACKET_TYPE_ADMITTED)) {
 			roomId = nextParam(&packet);
-			nickName = nextParam(&packet);
+			nickname = nextParam(&packet);
+			toChatForm(QString::fromStdString(roomId), QString::fromStdString(nickname));
+			return;
 
 		} else if (type == safeToInt(PACKET_TYPE_FAILED)) {
 			msgBoxCritical(QString::fromStdString(packet));
@@ -58,36 +60,34 @@ void EntranceForm::btnJoinHandler()
 			return;
 
 		}
-
-		toChatForm(QString::fromStdString(roomId));
 	}
 }
 
 void EntranceForm::btnCreateHandler()
 {
-	QString nickName = ui.MyNickname_4->text();
-	QString password = ui.NewRoomPassword_4->text();
+	QString nickname = ui.createNickname->text();
+	QString password = ui.createRoomPassword->text();
 
-	if (nickName.isEmpty()) {
+	if (nickname.isEmpty()) {
 		msgBoxWarning("The field for nickname cannot be empty");
 	} else {
 		/* Before creating the room */
-		if (nickName.length() == 0) {
+		if (nickname.length() == 0) {
 			msgBoxWarning("The field for nickname cannot be empty");
 			return;
 		}
 
 		int res = packetSend(PACKET_TYPE_CREATE_ROOM " " +
-			password.toStdString() + " " + nickName.toStdString());
+			password.toStdString() + " " + nickname.toStdString());
 
 		string packet = recvMsg();
 		int type = universalVerifier(&packet, false);
-		string roomId, nickName;
+		string roomId, nickname;
 
 		if (type == safeToInt(PACKET_TYPE_ADMITTED)) {
 			roomId = nextParam(&packet);
-			nickName = nextParam(&packet);
-
+			nickname = nextParam(&packet);
+			toChatForm(QString::fromStdString(roomId), QString::fromStdString(nickname));
 		} else if (type == safeToInt(PACKET_TYPE_FAILED)) {
 			msgBoxCritical(QString::fromStdString(packet));
 			return;
@@ -96,12 +96,12 @@ void EntranceForm::btnCreateHandler()
 			return;
 		}
 
-		toChatForm(QString::fromStdString(roomId));
 	}
 }
 
-void EntranceForm::toChatForm(QString roomID) {
-	room = new ChatForm;
+void EntranceForm::toChatForm(QString roomID, QString nickname) 
+{
+	room = new ChatForm(Q_NULLPTR, roomID, nickname, QString::fromStdString(hostStrGlobal));
 	room->setWindowTitle("Pop Chat [Chat Room: " + roomID + "]");
 	room->show();
 	hide();
