@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>872</width>
-    <height>630</height>
+    <width>880</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,7 +55,7 @@
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>9</pointsize>
+        <pointsize>11</pointsize>
        </font>
       </property>
      </widget>
@@ -71,7 +71,7 @@
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>9</pointsize>
+        <pointsize>11</pointsize>
        </font>
       </property>
       <property name="cursor" stdset="0">
@@ -112,7 +112,7 @@
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>9</pointsize>
+        <pointsize>11</pointsize>
        </font>
       </property>
       <property name="cursor" stdset="0">
@@ -134,7 +134,7 @@
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>9</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="text">

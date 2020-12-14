@@ -5,7 +5,7 @@ QSqlDatabase database;
 int openDB()
 {
     database = QSqlDatabase::addDatabase("QSQLITE");
-    database.setDatabaseName("local_store.db");
+    database.setDatabaseName("local_storage.db");
     if (!database.open()) {
         msgBoxCritical("Unable to open the local database.");
         return -1;
@@ -29,11 +29,11 @@ int openDB()
     }
 }
 
-int insertMessage(int chatSessionId, string nickname, string content)
+int insertMessage(string chatSessionId, string nickname, string content)
 {
     QSqlQuery query;
     string qurtyStr = "INSERT INTO message(chat_session_id, nickname, content) VALUES "
-        "(" + to_string(chatSessionId) + ", '" + safeToSQL(nickname) + "', '" + safeToSQL(content) + "');";
+        "(" + chatSessionId + ", '" + safeToSQL(nickname) + "', '" + safeToSQL(content) + "');";
 
     if (!query.exec(QString::fromStdString(qurtyStr)))
         return -1;

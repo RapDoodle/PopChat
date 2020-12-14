@@ -4,6 +4,7 @@
 #include "ChatSocket.h"
 #include "EntranceForm.h"
 #include "ChatForm.h"
+#include <QCloseEvent>
 
 EntranceForm::EntranceForm(QWidget *parent)
 	: QWidget(parent)
@@ -101,8 +102,9 @@ void EntranceForm::btnCreateHandler()
 
 void EntranceForm::toChatForm(QString roomID, QString nickname) 
 {
-	room = new ChatForm(Q_NULLPTR, roomID, nickname, QString::fromStdString(hostStrGlobal));
+	room = new ChatForm(Q_NULLPTR, nickname, roomID, QString::fromStdString(hostStrGlobal));
 	room->setWindowTitle("Pop Chat [Chat Room: " + roomID + "]");
 	room->show();
 	hide();
+
 }

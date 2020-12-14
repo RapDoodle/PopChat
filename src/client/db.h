@@ -9,5 +9,5 @@
 #include "utils.h"
 
 int openDB();
-int insertMessage(int chatSessionId, string nickname, string content);
+int insertMessage(string chatSessionId, string nickname, string content);
 int createSession(string host_ip);
