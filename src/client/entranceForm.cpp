@@ -68,8 +68,8 @@ void EntranceForm::btnCreateHandler()
 	QString nickName = ui.MyNickname_4->text();
 	QString password = ui.NewRoomPassword_4->text();
 
-	if (nickName.isEmpty() || password.isEmpty()) {
-		msgBoxWarning("The field for nickname and password cannot be empty");
+	if (nickName.isEmpty()) {
+		msgBoxWarning("The field for nickname cannot be empty");
 	} else {
 		/* Before creating the room */
 		if (nickName.length() == 0) {

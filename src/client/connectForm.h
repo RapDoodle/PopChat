@@ -10,6 +10,7 @@ class ConnectForm : public QWidget
 
 public:
     ConnectForm(QWidget *parent = Q_NULLPTR);
+    EntranceForm* ef;
 
 private slots:
     void btnLoginHandler();
@@ -17,6 +18,5 @@ private slots:
 
 private:
     Ui::ConnectFormClass ui;
-    EntranceForm* ef;
     //还有个检查是否成功连接server的function
 };
