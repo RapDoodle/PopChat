@@ -170,8 +170,8 @@ void ChatForm::renderMsg(QString nickname, QString content)
     } else {
         if (nickname.toStdString() != nicknameStrGlobal) {
             ui.messages->insertHtml(QStringLiteral("<br><p align='left' style='margin:0;'><b>") + nickname
-                + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("
-                    </p><p align='left' style='margin:0;'>"));
+                + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral(
+                    "</p><p align='left' style='margin:0;'>"));
             ui.messages->insertPlainText(content);
             ui.messages->insertHtml("</p><p align='left' style='margin:0;'></p>");
         } else {
