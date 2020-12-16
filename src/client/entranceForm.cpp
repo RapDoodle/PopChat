@@ -1,10 +1,4 @@
-#include "Protocol.h"
-#include "utils.h"
-#include "MessageBox.h"
-#include "ChatSocket.h"
 #include "EntranceForm.h"
-#include "ChatForm.h"
-#include <QCloseEvent>
 
 EntranceForm::EntranceForm(QWidget *parent)
 	: QWidget(parent)

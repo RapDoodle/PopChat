@@ -2,6 +2,8 @@
 
 #include <QtCore>
 
+#include "chatSocket.h"
+
 class RecvThread : public QThread
 {
     Q_OBJECT

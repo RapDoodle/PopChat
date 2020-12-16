@@ -1,4 +1,4 @@
-#include <QMessageBox>
+#include "MessageBox.h"
 
 void msgBoxInfo(QString s)
 {

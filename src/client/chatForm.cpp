@@ -1,15 +1,4 @@
-#include "utils.h"
-#include "db.h"
-#include "Protocol.h"
-#include "RecvThread.h"
-#include "MessageBox.h"
-#include "ChatSocket.h"
-#include "ChatForm.h"
 #include "ConnectForm.h"
-#include <QMessageBox>
-#include <QCloseEvent>
-
-#define MAX_WAIT_ATTEMPT 5
 
 ChatForm::ChatForm(QWidget *parent, QString nickname, QString roomId, QString host)
 	: QWidget(parent)
@@ -37,6 +26,7 @@ ChatForm::ChatForm(QWidget *parent, QString nickname, QString roomId, QString ho
                 renderMsg(QString::fromStdString(nickname), QString::fromStdString(packet));
 				recvThread = new RecvThread(this);
 				recvThread->start();
+                packetSend(PACKET_TYPE_REQUEST_USER_LIST);
                 connect(recvThread, SIGNAL(msgRecvEvent(QString)), this, SLOT(onMsgRecv(QString)));
 			}
             break;
@@ -111,9 +101,31 @@ void ChatForm::onMsgRecv(QString msg)
     string type = nextParam(&srchStr);
 
     /* Route different packets to different routine */
-    if (type == PACKET_TYPE_PING) {
+    if (type == PACKET_TYPE_SERVER_SEND) {
+        /* Data from server */
+        string nickname = nextParam(&srchStr);
+        /*
+        ui.messages->insertHtml(QStringLiteral("<br><br><b>") + QString::fromStdString(nickname)
+            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("<br>"));
+        ui.messages->insertPlainText(QString::fromStdString(srchStr).trimmed());
+        */
+        renderMsg(QString::fromStdString(nickname), QString::fromStdString(srchStr));
+        return;
+    } else if (type == PACKET_TYPE_PING) {
         /* Ping */
         packetSend(PACKET_TYPE_PONG);
+
+    } else if (type == PACKET_TYPE_USER_LIST) {
+        ui.userList->clear();
+        string packetId = nextParam(&srchStr);
+        string total = nextParam(&srchStr);
+
+        while (srchStr.length() > 0) {
+            string user = nextLine(&srchStr);
+            ui.userList->addItem(QString::fromStdString(user));
+        }
+
+        return;
 
     } else if (type == PACKET_TYPE_SUCCESS) {
         /* Success opration */
@@ -129,20 +141,9 @@ void ChatForm::onMsgRecv(QString msg)
     } else if (type == PACKET_TYPE_ERROR) {
         /* Error */
 
-    } else if (type == PACKET_TYPE_SERVER_SEND) {
-        /* Data from server */
-        string nickname = nextParam(&srchStr);
-        /*
-        ui.messages->insertHtml(QStringLiteral("<br><br><b>") + QString::fromStdString(nickname) 
-            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("<br>"));
-        ui.messages->insertPlainText(QString::fromStdString(srchStr).trimmed());
-        */
-        renderMsg(QString::fromStdString(nickname), QString::fromStdString(srchStr));
-        return;
     } else {
         /* Must do nothing to avoid infinite loop */
         return;
-
     }
 
     ui.messages->append(QString::fromStdString(srchStr).trimmed());

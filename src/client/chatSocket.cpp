@@ -1,17 +1,7 @@
-#include <winsock2.h>
-#include <ctype.h>
-#include <string>
-
 #include "ChatSocket.h"
-#include "MessageBox.h"
-#include "protocol.h"
-#include "utils.h"
-
-using namespace std;
 
 int sock;
 struct sockaddr_in srv;
-WSADATA ws;
 bool active = false;
 int errCount = 0;
 
@@ -19,6 +9,7 @@ int errCount = 0;
 
 int clientStartup(string host, int port)
 {
+    WSADATA ws;
     if (WSAStartup(MAKEWORD(2, 2), &ws) < 0) {
         WSACleanup();
         msgBoxCritical("Unable to initialize the network socket.");
