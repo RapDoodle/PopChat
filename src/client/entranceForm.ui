@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>roomEnter</string>
+   <string>PopChat</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -178,7 +178,7 @@
             </font>
            </property>
            <property name="text">
-            <string>  ChatID  </string>
+            <string>Room ID</string>
            </property>
           </widget>
          </item>

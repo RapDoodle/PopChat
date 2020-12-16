@@ -63,6 +63,10 @@ int countOrFreeRoom(int roomId)
 
 int groupSend(int roomId, string nickname, string message)
 {
+	if (roomId == NULL) {
+		return 0;
+	}
+
 	int count = 0;
 	for (int i = 0; i < CON_CLIENTS; i++) {
 		if (onlineClients[i].roomId == roomId) {

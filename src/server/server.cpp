@@ -33,7 +33,10 @@ int main(int argc, char** argv)
         port = atoi(argv[1]);
     }
 
-    dbInit();
+    /* Initialize the database */
+    if (dbInit() < 0) {
+        exit(EXIT_FAILURE);
+    }
 
     /* Call the initialize routine */
     app(port);

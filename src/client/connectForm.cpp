@@ -13,6 +13,7 @@ ConnectForm::ConnectForm(QWidget *parent)
     ui.setupUi(this);
     connect(ui.historyButton, SIGNAL(clicked()),this, SLOT(toHistory()));
     connect(ui.connectButton, SIGNAL(clicked()), this, SLOT(btnLoginHandler()));
+    setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
 }
 
 void ConnectForm::btnLoginHandler() 

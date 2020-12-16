@@ -12,6 +12,7 @@ EntranceForm::EntranceForm(QWidget *parent)
 	ui.setupUi(this);
 	connect(ui.JoinRoom_2, SIGNAL(clicked()), this, SLOT(btnJoinHandler()));
 	connect(ui.CreateNewRoom_2, SIGNAL(clicked()), this, SLOT(btnCreateHandler()));
+	setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
 }
 
 EntranceForm::~EntranceForm()

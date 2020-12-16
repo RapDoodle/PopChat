@@ -7,3 +7,4 @@ string recvMsg();
 string sendMsg(string msg);
 bool isActive();
 int packetSend(string content);
+string getIpAddr(string domain);

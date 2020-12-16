@@ -15,6 +15,7 @@ ChatForm::ChatForm(QWidget *parent, QString nickname, QString roomId, QString ho
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+    setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
     connect(ui.sendBtn, SIGNAL(clicked()), this, SLOT(sendBtnClicked()));
 
 	packetSend(PACKET_TYPE_JOINED);
@@ -149,18 +150,40 @@ void ChatForm::onMsgRecv(QString msg)
 void ChatForm::renderMsg(QString nickname, QString content)
 {
     ui.messages->moveCursor(QTextCursor::End);
-    if (nickname.toStdString() != nicknameStrGlobal) {
-        ui.messages->insertHtml(QStringLiteral("<br><p align='left' style='margin:0;'><b>") + nickname
-            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("</p><p align='left' style='margin:0;'>"));
-        ui.messages->insertPlainText(content);
-        ui.messages->insertHtml("</p><p align='left' style='margin:0;'></p>");
+
+    /* Duplicated code due to render issues of Qt */
+    if (ui.messages->toPlainText().length() == 0) {
+        if (nickname.toStdString() != nicknameStrGlobal) {
+            ui.messages->insertHtml(QStringLiteral("<p align='left' style='margin:0;'><b>") + nickname
+                + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral(
+                    "</p><p align='left' style='margin:0;'>"));
+            ui.messages->insertPlainText(content);
+            ui.messages->insertHtml("</p><p align='left' style='margin:0;'></p>");
+        } else {
+            ui.messages->insertHtml(QStringLiteral("<p align='right' style='margin:0;'>") +
+                QString::fromStdString(getCurrentTimeString()) + QStringLiteral(" <b>") + nickname +
+                QStringLiteral("</b></p><p align='right' style='margin:0;'>"));
+            ui.messages->insertPlainText(content);
+            ui.messages->insertHtml("</p><p align='right' style='margin:0;'></p>");
+        }
+
     } else {
-        ui.messages->insertHtml(QStringLiteral("<br><p align='right' style='margin:0;'>") + 
-            QString::fromStdString(getCurrentTimeString()) + QStringLiteral(" <b>") + nickname +
-            QStringLiteral("</b></p><p align='right' style='margin:0;'>"));
-        ui.messages->insertPlainText(content);
-        ui.messages->insertHtml("</p><p align='right' style='margin:0;'></p>");
+        if (nickname.toStdString() != nicknameStrGlobal) {
+            ui.messages->insertHtml(QStringLiteral("<br><p align='left' style='margin:0;'><b>") + nickname
+                + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("
+                    </p><p align='left' style='margin:0;'>"));
+            ui.messages->insertPlainText(content);
+            ui.messages->insertHtml("</p><p align='left' style='margin:0;'></p>");
+        } else {
+            ui.messages->insertHtml(QStringLiteral("<br><p align='right' style='margin:0;'>") +
+                QString::fromStdString(getCurrentTimeString()) + QStringLiteral(" <b>") + nickname +
+                QStringLiteral("</b></p><p align='right' style='margin:0;'>"));
+            ui.messages->insertPlainText(content);
+            ui.messages->insertHtml("</p><p align='right' style='margin:0;'></p>");
+        }
+
     }
+
     ui.messages->verticalScrollBar()->setValue(ui.messages->verticalScrollBar()->maximum());
 
     /* Save the message to the local drive */
