@@ -3,9 +3,10 @@ using namespace std;
 
 #include <string>
 
-#define DELIMITER " "
-#define DELIMITER_SIZE 1
-#define PROTOCOL_VERSION "POP/1.0"
+#define DELIMITER			"\x1E"
+#define DELIMITER_CHAR		'\x1E'
+#define DELIMITER_SIZE		1
+#define PROTOCOL_VERSION	"POP/1.0"
 
 #define PACKET_TYPE_PING				"00"
 #define PACKET_TYPE_PONG				"01"

@@ -32,9 +32,9 @@ void EntranceForm::btnJoinHandler()
 	}  else {
 
 		/* Before joining the room */
-		int res = packetSend(PACKET_TYPE_JOIN_ROOM " " + 
-			roomId.toStdString() + " " + 
-			password.toStdString() + " " + 
+		int res = packetSend(PACKET_TYPE_JOIN_ROOM DELIMITER + 
+			roomId.toStdString() + DELIMITER +
+			password.toStdString() + DELIMITER +
 			nickname.toStdString());
 
 		if (res == -1) {
@@ -79,8 +79,8 @@ void EntranceForm::btnCreateHandler()
 			return;
 		}
 
-		int res = packetSend(PACKET_TYPE_CREATE_ROOM " " +
-			password.toStdString() + " " + nickname.toStdString());
+		int res = packetSend(PACKET_TYPE_CREATE_ROOM DELIMITER +
+			password.toStdString() + DELIMITER + nickname.toStdString());
 
 		string packet = recvMsg();
 		int type = universalVerifier(&packet, false);

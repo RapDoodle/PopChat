@@ -22,6 +22,7 @@ void ConnectForm::btnLoginHandler()
     QString port = ui.portField->text();
     if (host.isEmpty() || port.isEmpty()) {
         QMessageBox::warning(this, "Invalid Input", "Host and port number cannot be empty.");
+
     } else {
         /* Connect to the server */
         if (clientStartup(host.toStdString().c_str(), atoi(port.toStdString().c_str())) < 0)

@@ -18,7 +18,7 @@ int packetHandler(struct Client* client, char* buff)
     string version = nextParam(&srchStr);
 
     if (version != PROTOCOL_VERSION) {
-        packetSend(client->socketId, PACKET_TYPE_ERROR " Incompatible protocol version");
+        packetSend(client->socketId, PACKET_TYPE_ERROR DELIMITER "Incompatible protocol version");
         return -1;
     }
 
@@ -39,7 +39,7 @@ int packetHandler(struct Client* client, char* buff)
     } else if (type == PACKET_TYPE_CREATE_ROOM) {
         /* Create room */
         if (client->roomId != NULL) {
-            packetSend(client->socketId, PACKET_TYPE_ERROR " You've already joined room " + 
+            packetSend(client->socketId, PACKET_TYPE_ERROR DELIMITER "You've already joined room " +
                 to_string(client->roomId));
             return -1;
         }
@@ -49,7 +49,7 @@ int packetHandler(struct Client* client, char* buff)
 
         /* Make sure the user does not use the bot's name */
         if (nickname == BOT_NAME) {
-            packetSend(client->socketId, PACKET_TYPE_FAILED " The nickname already exists in the room. Please pick another name.");
+            packetSend(client->socketId, PACKET_TYPE_FAILED DELIMITER "The nickname already exists in the room. Please pick another name.");
             return -1;
         }
 
@@ -58,7 +58,7 @@ int packetHandler(struct Client* client, char* buff)
         client->socketSessionId = createSocketSession(client->ip, client->nickname);
 
         /* Admitted procedure */
-        packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickname);
+        packetSend(client->socketId, PACKET_TYPE_ADMITTED DELIMITER + to_string(client->roomId) + DELIMITER + client->nickname);
         client->status = CREATED;
         
 
@@ -67,7 +67,7 @@ int packetHandler(struct Client* client, char* buff)
         string roomId = nextParam(&srchStr);
 
         if (client->roomId != NULL && client->roomId != safeToInt(roomId)) {
-            packetSend(client->socketId, PACKET_TYPE_FAILED " You've already joined another room " +
+            packetSend(client->socketId, PACKET_TYPE_FAILED DELIMITER "You've already joined another room " +
                 to_string(client->roomId));
             return -1;
 
@@ -80,14 +80,14 @@ int packetHandler(struct Client* client, char* buff)
                 found = true;
                 string pwd = nextParam(&srchStr);
                 if (pwd != rooms[i].roomPassword) {
-                    packetSend(client->socketId, PACKET_TYPE_FAILED " Incorrect password");
+                    packetSend(client->socketId, PACKET_TYPE_FAILED DELIMITER "Incorrect password");
                     return -1;
                 }
 
                 /* Check for name collision */
                 string nickname = nextParam(&srchStr);
                 if (checkNameCollision(rooms[i].roomId, nickname)) {
-                    packetSend(client->socketId, PACKET_TYPE_FAILED " The nickname already exists in the room. Please pick another name.");
+                    packetSend(client->socketId, PACKET_TYPE_FAILED DELIMITER "The nickname already exists in the room. Please pick another name.");
                     return -1;
                 }
 
@@ -96,13 +96,13 @@ int packetHandler(struct Client* client, char* buff)
                 client->nickname = nickname;
                 client->status = JOINING;
                 client->socketSessionId = createSocketSession(client->ip, client->nickname);
-                packetSend(client->socketId, PACKET_TYPE_ADMITTED " " + to_string(client->roomId) + " " + client->nickname);
+                packetSend(client->socketId, PACKET_TYPE_ADMITTED DELIMITER + to_string(client->roomId) + DELIMITER + client->nickname);
 
             }
         }
 
         if (!found) {
-            packetSend(client->socketId, PACKET_TYPE_FAILED " Room number not found. Consider creating one?");
+            packetSend(client->socketId, PACKET_TYPE_FAILED DELIMITER "Room number not found. Consider creating one?");
             return -1;
 
         }
@@ -112,7 +112,7 @@ int packetHandler(struct Client* client, char* buff)
         int roomId = client->roomId;
         client->roomId = NULL;
         client->nickname = "";
-        // packetSend(client->socketId, PACKET_TYPE_SUCCESS " You've left the room successfully");
+        // packetSend(client->socketId, PACKET_TYPE_SUCCESS DELIMITER "You've left the room successfully");
         int clientCount = groupSend(roomId, BOT_NAME, client->nickname + " has left the chat.");
         if (clientCount <= 0)
             countOrFreeRoom(roomId);
@@ -121,7 +121,7 @@ int packetHandler(struct Client* client, char* buff)
         if (client->status == CREATED) {
             for (int i = 0; i < MAX_ROOMS; i++) {
                 if (rooms[i].roomId == client->roomId) {
-                    packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot Created successfully. Room number: " +
+                    packetSend(client->socketId, PACKET_TYPE_SERVER_SEND DELIMITER BOT_NAME DELIMITER "Created successfully. Room number: " +
                         to_string(rooms[i].roomId) + ". Room password: " + rooms[i].roomPassword);
                     break;
                 }
@@ -129,18 +129,18 @@ int packetHandler(struct Client* client, char* buff)
             client->status = JOINED;
 
         } else if (client->status == JOINING) {
-            packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot You've joined room " + to_string(client->roomId));
+            packetSend(client->socketId, PACKET_TYPE_SERVER_SEND DELIMITER BOT_NAME DELIMITER "You've joined room " + to_string(client->roomId));
             client->status = JOINED;
 
         } else {
-            packetSend(client->socketId, PACKET_TYPE_SERVER_SEND " Bot Welcome back to room " + to_string(client->roomId));
+            packetSend(client->socketId, PACKET_TYPE_SERVER_SEND DELIMITER BOT_NAME DELIMITER "Welcome back to room " + to_string(client->roomId));
             client->status = JOINED;
 
         }
 
     } else if (type == PACKET_TYPE_CLIENT_SEND) {
         if (client->roomId == NULL) {
-            packetSend(client->socketId, PACKET_TYPE_ERROR " You are not in any room");
+            packetSend(client->socketId, PACKET_TYPE_ERROR DELIMITER BOT_NAME DELIMITER "You are not in any room");
             return -1;
         }
 
