@@ -34,6 +34,8 @@ void ConnectForm::btnLoginHandler()
 
 void ConnectForm::toHistory() 
 {
-
+    hf = new HistoryForm;
+    hf->show();
+    hide();
 
 }

@@ -41,15 +41,14 @@ int clientStartup(string host, int port)
         srv.sin_addr.s_addr = inet_addr(charHost);
     } else {
         struct hostent* hent = gethostbyname(host.c_str());
-        int i = 0;
-        while (hent->h_addr_list[i] != 0) {
-            srv.sin_addr.s_addr = *(u_long*)hent->h_addr_list[i++];
-        }
-
-        if (i == 0) {
+        if (hent == NULL) {
             msgBoxCritical("Host not found.");
             WSACleanup();
             return -1;
+        }
+        int i = 0;
+        while (hent->h_addr_list[i] != 0) {
+            srv.sin_addr.s_addr = *(u_long*)hent->h_addr_list[i++];
         }
     }
     
