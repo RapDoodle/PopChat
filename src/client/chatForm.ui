@@ -37,7 +37,7 @@
      <property name="title">
       <string/>
      </property>
-     <widget class="QListWidget" name="relationship">
+     <widget class="QListWidget" name="userList">
       <property name="geometry">
        <rect>
         <x>640</x>
@@ -141,7 +141,7 @@
        <string>Send</string>
       </property>
      </widget>
-     <zorder>relationship</zorder>
+     <zorder>userList</zorder>
      <zorder>ScrollBar</zorder>
      <zorder>messages</zorder>
      <zorder>messageField</zorder>
@@ -162,7 +162,7 @@
   <tabstop>messageField</tabstop>
   <tabstop>sendBtn</tabstop>
   <tabstop>messages</tabstop>
-  <tabstop>relationship</tabstop>
+  <tabstop>userList</tabstop>
  </tabstops>
  <resources/>
  <connections/>

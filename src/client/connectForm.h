@@ -1,8 +1,12 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <QMessageBox>
+
 #include "ui_ConnectForm.h"
 #include "EntranceForm.h"
+#include "MessageBox.h"
+#include "ChatSocket.h"
 
 class ConnectForm : public QWidget
 {

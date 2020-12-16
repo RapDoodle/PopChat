@@ -1,9 +1,4 @@
-#include <iostream>
-#include <chrono>
-#include <string>
-#include <ctime>
-
-using namespace std;
+#include "utils.h"
 
 string getCurrentDateTimeString()
 {
@@ -45,4 +40,12 @@ string safeToSQL(string s)
         }
     }
     return s;
+}
+
+string nextLine(string* text)
+{
+    size_t pos = text->find("\n");
+    string val = text->substr(0, pos);
+    text->erase(0, pos + 1);
+    return val;
 }

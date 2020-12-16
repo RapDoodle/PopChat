@@ -114,9 +114,16 @@ int packetHandler(struct Client* client, char* buff)
         client->nickname = "";
         // packetSend(client->socketId, PACKET_TYPE_SUCCESS DELIMITER "You've left the room successfully");
         int clientCount = groupSend(roomId, BOT_NAME, client->nickname + " has left the chat.");
-        if (clientCount <= 0)
+
+        if (clientCount <= 0) {
             countOrFreeRoom(roomId);
 
+        } else {
+            /* Update the name list */
+            string userList = getRoomUserList(roomId);
+            groupNotify(roomId, PACKET_TYPE_USER_LIST DELIMITER "1" DELIMITER "1" DELIMITER + userList);
+        }
+            
     } else if (type == PACKET_TYPE_JOINED) {
         if (client->status == CREATED) {
             for (int i = 0; i < MAX_ROOMS; i++) {
@@ -129,6 +136,12 @@ int packetHandler(struct Client* client, char* buff)
             client->status = JOINED;
 
         } else if (client->status == JOINING) {
+            int count = groupSend(client->roomId, BOT_NAME, client->nickname + " has joined chat.");
+            if (count > 0) {
+                /* When there is someone in the room that can see the message */
+                string userList = getRoomUserList(client->roomId);
+                groupNotify(client->roomId, PACKET_TYPE_USER_LIST DELIMITER "1" DELIMITER "1" DELIMITER + userList);
+            }
             packetSend(client->socketId, PACKET_TYPE_SERVER_SEND DELIMITER BOT_NAME DELIMITER "You've joined room " + to_string(client->roomId));
             client->status = JOINED;
 
@@ -137,6 +150,10 @@ int packetHandler(struct Client* client, char* buff)
             client->status = JOINED;
 
         }
+
+    } else if (type == PACKET_TYPE_REQUEST_USER_LIST) {
+        string userList = getRoomUserList(client->roomId);
+        packetSend(client->socketId, PACKET_TYPE_USER_LIST DELIMITER "1" DELIMITER "1" DELIMITER + userList);
 
     } else if (type == PACKET_TYPE_CLIENT_SEND) {
         if (client->roomId == NULL) {

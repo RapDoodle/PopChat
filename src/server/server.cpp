@@ -194,6 +194,9 @@ void app(int port)
                             int count = groupSend(roomId, BOT_NAME, nickname + " has disconnected.");
                             if (count <= 0) {
                                 countOrFreeRoom(roomId);
+                            } else {
+                                string userList = getRoomUserList(roomId);
+                                groupNotify(roomId, PACKET_TYPE_USER_LIST DELIMITER "1" DELIMITER "1" DELIMITER + userList);
                             }
 
                         } else {

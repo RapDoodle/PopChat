@@ -1,9 +1,4 @@
-#include "db.h"
 #include "room.h"
-#include "const.h"
-#include "server.h"
-
-using namespace std;
 
 int createRoom(string roomPassword)
 {
@@ -52,7 +47,7 @@ int countOrFreeRoom(int roomId)
 				rooms[i].roomId = NULL;
 				rooms[i].sessionId = -1;
 				rooms[i].roomPassword = "";
-				consoleLog("Room " + to_string(roomId) + " has been recycled.");
+				consoleLog("Room " + to_string(roomId) + " has been recycled");
 				return 0;
 			}
 		}
@@ -61,7 +56,7 @@ int countOrFreeRoom(int roomId)
 	return count;
 }
 
-int groupSend(int roomId, string nickname, string message)
+int groupNotify(int roomId, string message)
 {
 	if (roomId == NULL) {
 		return 0;
@@ -69,14 +64,20 @@ int groupSend(int roomId, string nickname, string message)
 
 	int count = 0;
 	for (int i = 0; i < CON_CLIENTS; i++) {
-		if (onlineClients[i].roomId == roomId) {
-			packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND DELIMITER + nickname + DELIMITER + message);
+		if (onlineClients[i].roomId == roomId && onlineClients[i].status == JOINED) {
+			packetSend(onlineClients[i].socketId, message);
 			count++;
 		}
 	}
 
 	/* Exited normally */
 	return count;
+}
+
+int groupSend(int roomId, string nickname, string message)
+{
+	/* Use the interface provided by groupNotify */
+	return groupNotify(roomId, PACKET_TYPE_SERVER_SEND DELIMITER + nickname + DELIMITER + message);
 }
 
 bool checkNameCollision(int roomId, string nickname)
@@ -94,4 +95,15 @@ bool checkNameCollision(int roomId, string nickname)
 	
 	/* When no name collision is found */
 	return false;
+}
+
+string getRoomUserList(int roomId)
+{
+	string listStr = "";
+	for (int i = 0; i < CON_CLIENTS; i++) {
+		if (onlineClients[i].roomId == roomId) {
+			listStr += onlineClients[i].nickname + "\n";
+		}
+	}
+	return listStr;
 }

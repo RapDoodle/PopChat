@@ -1,10 +1,4 @@
-#include <QMessageBox>
-
-#include "MessageBox.h"
-#include "ChatSocket.h"
 #include "ConnectForm.h"
-#include "EntranceForm.h"
-
 
 ConnectForm::ConnectForm(QWidget *parent)
     : QWidget(parent)

@@ -1,12 +1,22 @@
 #pragma once
 
+#define MAX_WAIT_ATTEMPT 5
+
 #include <QMutex>
 #include <QWidget>
-#include <QCloseEvent>
 #include <QKeyEvent>
+#include <QCloseEvent>
+#include <QMessageBox>
+#include <QCloseEvent>
 #include "ui_ChatForm.h"
 
+#include "utils.h"
+#include "db.h"
+#include "Protocol.h"
 #include "RecvThread.h"
+#include "MessageBox.h"
+#include "ChatSocket.h"
+#include "ChatForm.h"
 
 class ChatForm : public QWidget
 {

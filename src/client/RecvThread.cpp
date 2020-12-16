@@ -1,8 +1,3 @@
-#include <QtCore>
-#include <QDebug>
-#include <QMessageBox>
-
-#include "chatSocket.h"
 #include "RecvThread.h"
 
 RecvThread::RecvThread(QObject* parent)

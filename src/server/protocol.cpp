@@ -28,7 +28,6 @@ string nextParam(string* srchStr)
     size_t pos = srchStr->find(DELIMITER);
     string val = srchStr->substr(0, pos);
     srchStr->erase(0, pos + DELIMITER_SIZE);
-    cout << val << endl;
     return val;
 }
 
