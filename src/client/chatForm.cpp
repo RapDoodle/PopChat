@@ -39,7 +39,7 @@ ChatForm::ChatForm(QWidget *parent, QString nickname, QString roomId, QString ho
     roomIdStrGlobal = roomId.toStdString();
 
     openDB();
-    localSessionId = to_string(createSession(host.toStdString()));
+    localSessionId = to_string(createSession(hostStrGlobal, nicknameStrGlobal));
     
     if (!success) {
         msgBoxCritical("Failed to connect. Please try again later.");

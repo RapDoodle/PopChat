@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="db.cpp" />
+    <ClCompile Include="HistoryForm.cpp" />
     <ClCompile Include="MessageBox.cpp" />
     <ClCompile Include="MessageTextEdit.cpp" />
     <ClCompile Include="Protocol.cpp" />
@@ -123,6 +124,7 @@
   <ItemGroup>
     <ClInclude Include="ChatSocket.h" />
     <ClInclude Include="db.h" />
+    <QtMoc Include="HistoryForm.h" />
     <ClInclude Include="MessageBox.h" />
     <QtMoc Include="MessageTextEdit.h" />
     <ClInclude Include="Protocol.h" />
@@ -134,6 +136,7 @@
     <QtUic Include="ChatForm.ui" />
     <QtUic Include="ConnectForm.ui" />
     <QtUic Include="EntranceForm.ui" />
+    <QtUic Include="HistoryForm.ui" />
     <QtUic Include="MessageTextEdit.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
