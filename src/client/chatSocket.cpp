@@ -1,4 +1,5 @@
 #include <winsock2.h>
+#include <ctype.h>
 #include <string>
 
 #include "ChatSocket.h"
@@ -16,11 +17,11 @@ int errCount = 0;
 
 #define MAX_ATTEMP 100
 
-int clientStartup(string ip, int port)
+int clientStartup(string host, int port)
 {
     if (WSAStartup(MAKEWORD(2, 2), &ws) < 0) {
         WSACleanup();
-        msgBoxCritical("Unable to connect to the server. Please verify the IP address and the port number.");
+        msgBoxCritical("Unable to initialize the network socket.");
         return -1;
     }
 
@@ -28,7 +29,7 @@ int clientStartup(string ip, int port)
 
     if (sock < 0) {
         WSACleanup();
-        msgBoxCritical("Fail to open the socket");
+        msgBoxCritical("Fail to open the socket.");
         return -1;
     }
 
@@ -36,21 +37,36 @@ int clientStartup(string ip, int port)
     u_long mode = 0;
     if (ioctlsocket(sock, FIONBIO, &mode) != NO_ERROR) {
         WSACleanup();
-        msgBoxCritical("ioctlsocket call failed");
+        msgBoxCritical("ioctlsocket call failed.");
         return -1;
     }
 
-    char charIp[64];
-    strcpy(charIp, ip.c_str());
+    char charHost[64];
+    strcpy(charHost, host.c_str());
 
     srv.sin_family = AF_INET;
     srv.sin_port = htons(port);
-    srv.sin_addr.s_addr = inet_addr(charIp);
+    if (isdigit(charHost[0])) {
+        srv.sin_addr.s_addr = inet_addr(charHost);
+    } else {
+        struct hostent* hent = gethostbyname(host.c_str());
+        int i = 0;
+        while (hent->h_addr_list[i] != 0) {
+            srv.sin_addr.s_addr = *(u_long*)hent->h_addr_list[i++];
+        }
+
+        if (i == 0) {
+            msgBoxCritical("Host not found.");
+            WSACleanup();
+            return -1;
+        }
+    }
+    
     memset(&srv.sin_zero, 0, 8);
 
     if (connect(sock, (struct sockaddr*)&srv, sizeof(srv)) < 0) {
         WSACleanup();
-        msgBoxCritical("Unable to connect. Please verify the IP address and the port number.");
+        msgBoxCritical("Unable to connect. Please verify the host and the port number.");
         return -1;
     }
 
@@ -65,6 +81,8 @@ int clientStartup(string ip, int port)
         msgBoxCritical("The connection is not established. Please try again later.");
         return -1;
     }
+
+    // getIpAddr("uic.edu.hk");
 
     active = true;
     return 0;
@@ -145,4 +163,29 @@ string sendMsg(string msg)
         // return msg;
         return "";  // Wait for the server to return the message
     }
+}
+
+string getIpAddr(string domain)
+{
+    struct hostent* hent;
+    struct in_addr addr;
+    
+    hent = gethostbyname("uic.edu.hk");
+
+    //if (hent == NULL) {
+    //    msgBoxCritical("Host not found. Please verify the domain");
+    //    return "";
+    //}
+
+    /* Read out the ip address as type string */
+    int i = 0;
+    string ipStr = "";
+    while (hent->h_addr_list[i] != 0) {
+        addr.s_addr = *(u_long*)hent->h_addr_list[i++];
+        /* inet_ntoa converts IP address to ASCII string with dotted-decimal format */
+        ipStr += inet_ntoa(addr); 
+    }
+
+    msgBoxInfo(QString::fromStdString(ipStr));
+    return ipStr;
 }

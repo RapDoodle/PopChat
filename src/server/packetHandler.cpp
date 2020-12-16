@@ -118,7 +118,6 @@ int packetHandler(struct Client* client, char* buff)
             countOrFreeRoom(roomId);
 
     } else if (type == PACKET_TYPE_JOINED) {
-        cout << "hi" << endl;
         if (client->status == CREATED) {
             for (int i = 0; i < MAX_ROOMS; i++) {
                 if (rooms[i].roomId == client->roomId) {

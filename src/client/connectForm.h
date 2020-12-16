@@ -18,5 +18,4 @@ private slots:
 
 private:
     Ui::ConnectFormClass ui;
-    //还有个检查是否成功连接server的function
 };
