@@ -17,6 +17,7 @@ ChatForm::ChatForm(QWidget *parent, QString nickname, QString roomId, QString ho
 	ui.setupUi(this);
     setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
     connect(ui.sendBtn, SIGNAL(clicked()), this, SLOT(sendBtnClicked()));
+    connect(ui.messageField, SIGNAL(messageEditEnterKeyPressed()), this, SLOT(onFieldEnterKeyPressed()));
 
 	packetSend(PACKET_TYPE_JOINED);
 	
@@ -189,4 +190,9 @@ void ChatForm::renderMsg(QString nickname, QString content)
     /* Save the message to the local drive */
     insertMessage(localSessionId, nickname.toStdString(), content.toStdString());
     
+}
+
+void ChatForm::onFieldEnterKeyPressed()
+{
+    sendBtnClicked();
 }

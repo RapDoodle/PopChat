@@ -22,6 +22,7 @@ class ChatForm : public QWidget
 
 	private slots:
 		void sendBtnClicked();
+		void onFieldEnterKeyPressed();
 
 	private:
 		Ui::ChatFormClass ui;

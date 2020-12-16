@@ -59,7 +59,7 @@
        </font>
       </property>
      </widget>
-     <widget class="QPlainTextEdit" name="messageField">
+     <widget class="MessageTextEdit" name="messageField">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -151,6 +151,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MessageTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header>MessageTextEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>messageField</tabstop>
   <tabstop>sendBtn</tabstop>
