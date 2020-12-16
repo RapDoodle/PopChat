@@ -1,5 +1,7 @@
 #include "protocol.h"
 
+#include <iostream>
+
 using namespace std;
 
 int calculateCheckSum(string s)
@@ -26,6 +28,7 @@ string nextParam(string* srchStr)
     size_t pos = srchStr->find(DELIMITER);
     string val = srchStr->substr(0, pos);
     srchStr->erase(0, pos + DELIMITER_SIZE);
+    cout << val << endl;
     return val;
 }
 
@@ -34,8 +37,8 @@ string packetWrapper(string content)
     /* Adds the protocol version number and a checksum 
      * to the packet */
     string wrapped = PROTOCOL_VERSION;
-    wrapped = wrapped + " " + 
+    wrapped = wrapped + DELIMITER + 
         to_string(calculateCheckSum(content)) + 
-        " " + content;
+        DELIMITER + content;
     return wrapped;
 }

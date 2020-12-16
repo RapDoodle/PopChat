@@ -138,7 +138,7 @@ string recvMsg()
             active = false;
             closesocket(sock);
             WSACleanup();
-            return packetWrapper(PACKET_TYPE_ERROR " Lost connection with the server");
+            return packetWrapper(PACKET_TYPE_ERROR DELIMITER "Lost connection with the server");
         }
         return "";
     }
@@ -157,7 +157,7 @@ string sendMsg(string msg)
     if (msgLen > 140)
         return "Message too long";
 
-    if (packetSend(PACKET_TYPE_CLIENT_SEND " " + msg) == SOCKET_ERROR) {
+    if (packetSend(PACKET_TYPE_CLIENT_SEND DELIMITER + msg) == SOCKET_ERROR) {
         return "Failed to send";
     } else {
         // return msg;

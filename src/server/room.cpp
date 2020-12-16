@@ -70,7 +70,7 @@ int groupSend(int roomId, string nickname, string message)
 	int count = 0;
 	for (int i = 0; i < CON_CLIENTS; i++) {
 		if (onlineClients[i].roomId == roomId) {
-			packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND " " + nickname + " " + message);
+			packetSend(onlineClients[i].socketId, PACKET_TYPE_SERVER_SEND DELIMITER + nickname + DELIMITER + message);
 			count++;
 		}
 	}

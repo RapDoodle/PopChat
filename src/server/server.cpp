@@ -167,7 +167,7 @@ void app(int port)
                         if (onlineClients[i].socketId == 0) {
                             onlineClients[i].socketId = currSock;
                             onlineClients[i].ip = ip;
-                            packetSend(currSock, PACKET_TYPE_SUCCESS " Connected");
+                            packetSend(currSock, PACKET_TYPE_SUCCESS DELIMITER "Connected");
                             break;
                         }
                     }
@@ -199,7 +199,7 @@ void app(int port)
                         } else {
                             /* Handle the new message from the client */
                             if (strlen(recvBuff) > 0) {
-                                // cout << "[" << onlineClients[i].socketId << "][" << onlineClients[i].roomId << "][" << onlineClients[i].nickname << "]: " << recvBuff << endl;
+                                cout << "[" << onlineClients[i].socketId << "][" << onlineClients[i].roomId << "][" << onlineClients[i].nickname << "]: " << recvBuff << endl;
                                 packetHandler(&onlineClients[i], recvBuff);
 
                             }
