@@ -98,11 +98,17 @@
   <ItemGroup>
     <ClCompile Include="db.cpp" />
     <ClCompile Include="MessageBox.cpp" />
+    <ClCompile Include="MessageTextEdit.cpp" />
     <ClCompile Include="Protocol.cpp" />
     <ClCompile Include="RecvThread.cpp" />
     <ClCompile Include="utils.cpp" />
     <QtRcc Include="connectForm.qrc" />
-    <ClCompile Include="ChatForm.cpp" />
+    <ClCompile Include="ChatForm.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="ChatSocket.cpp" />
     <ClCompile Include="ConnectForm.cpp" />
     <ClCompile Include="EntranceForm.cpp" />
@@ -118,6 +124,7 @@
     <ClInclude Include="ChatSocket.h" />
     <ClInclude Include="db.h" />
     <ClInclude Include="MessageBox.h" />
+    <QtMoc Include="MessageTextEdit.h" />
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="utils.h" />
     <QtMoc Include="EntranceForm.h" />
@@ -127,6 +134,7 @@
     <QtUic Include="ChatForm.ui" />
     <QtUic Include="ConnectForm.ui" />
     <QtUic Include="EntranceForm.ui" />
+    <QtUic Include="MessageTextEdit.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
