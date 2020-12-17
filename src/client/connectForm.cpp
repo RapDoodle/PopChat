@@ -37,5 +37,5 @@ void ConnectForm::toHistory()
     hf = new HistoryForm;
     hf->show();
     hide();
-
+    connect(hf, SIGNAL(ExitWin()), this, SLOT(show()));
 }

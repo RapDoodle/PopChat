@@ -60,7 +60,7 @@ int createSession(string host, string nickname)
     }
 }
 
-QList<struct ChatEntry> getChatData(int sessionId, string content, string nickname, string host)
+QList<struct ChatEntry> getChatData(int sessionId, string content, string nickname, string host, string timeStart, string timeEnd)
 {
     QList<struct ChatEntry> list;
     QSqlQuery query;
@@ -81,6 +81,11 @@ QList<struct ChatEntry> getChatData(int sessionId, string content, string nickna
         queryStr += "AND chat_session.host LIKE '%" + safeToSQL(host) + "%' ";
     }
 
+    if (timeStart.length() > 0 && timeEnd.length() > 0) {
+        queryStr += "AND (message.created_at BETWEEN date('" +
+            timeStart + "', 'localtime') AND date('" + timeEnd + "', 'localtime'))";
+    }
+
     queryStr += " ORDER BY message.created_at ASC";
 
     query.exec(QString::fromStdString(queryStr));
@@ -97,7 +102,7 @@ QList<struct ChatEntry> getChatData(int sessionId, string content, string nickna
     return list;
 }
 
-QList<struct ListEntry> findSession(int type, string content, string nickname, string host)
+QList<struct ListEntry> findSession(int type, string content, string nickname, string host, string timeStart, string timeEnd)
 {
     QList<struct ListEntry> list;
     QSqlQuery query;
@@ -122,6 +127,11 @@ QList<struct ListEntry> findSession(int type, string content, string nickname, s
 
         if (host.length() > 0) {
             queryStr += "AND chat_session.host LIKE '%" + safeToSQL(host) + "%' ";
+        }
+
+        if (timeStart.length() > 0 && timeEnd.length() > 0) {
+            queryStr += "AND (message.created_at BETWEEN date('" +
+                timeStart + "', 'localtime') AND date('" + timeEnd + "', 'localtime'))";
         }
 
         queryStr += "ORDER BY chat_session.created_at DESC";

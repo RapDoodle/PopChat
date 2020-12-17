@@ -104,11 +104,6 @@ void ChatForm::onMsgRecv(QString msg)
     if (type == PACKET_TYPE_SERVER_SEND) {
         /* Data from server */
         string nickname = nextParam(&srchStr);
-        /*
-        ui.messages->insertHtml(QStringLiteral("<br><br><b>") + QString::fromStdString(nickname)
-            + QStringLiteral("</b> ") + QString::fromStdString(getCurrentTimeString()) + QStringLiteral("<br>"));
-        ui.messages->insertPlainText(QString::fromStdString(srchStr).trimmed());
-        */
         renderMsg(QString::fromStdString(nickname), QString::fromStdString(srchStr));
         return;
     } else if (type == PACKET_TYPE_PING) {
@@ -124,6 +119,8 @@ void ChatForm::onMsgRecv(QString msg)
             string user = nextLine(&srchStr);
             ui.userList->addItem(QString::fromStdString(user));
         }
+
+        ui.userList->sortItems();
 
         return;
 
