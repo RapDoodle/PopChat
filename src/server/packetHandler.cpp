@@ -5,7 +5,7 @@ using namespace std;
 int packetSend(int client, string content)
 {
     string packet = packetWrapper(content);
-    cout << "[DEBUG] " << packet << endl;
+    // cout << "[DEBUG] " << packet << endl;
     return send(client, packet.c_str(), packet.length(), 0);
 }
 
