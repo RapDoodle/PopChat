@@ -18,7 +18,7 @@ HistoryForm::HistoryForm(QWidget *parent)
     }
 
 	/* Load all lists */
-	sessionList = findSession(LIST_ALL, NULL_STR, NULL_STR, NULL_STR);
+	sessionList = findSession(LIST_ALL, NULL_STR, NULL_STR, NULL_STR, NULL_STR, NULL_STR);
     renderList();
 }
 
@@ -48,7 +48,8 @@ void HistoryForm::onSessionSelect(int idx)
     if (sessionList.count() > 0 && idx < sessionList.count()) {
         i += idx;
         messages = getChatData(i->sessionId, ui.contentField->text().toStdString(),
-            ui.nicknameField->text().toStdString(), ui.hostField->text().toStdString());
+            ui.nicknameField->text().toStdString(), ui.hostField->text().toStdString(),
+            ui.dateEditBegin->text().toStdString(), ui.dateEditEnd->text().toStdString());
         currNickname = i->nickname;
         renderMessages();
     }
@@ -57,8 +58,11 @@ void HistoryForm::onSessionSelect(int idx)
 
 void HistoryForm::searchBtnHandler()
 {
+    // ui.dateTimeStart.dateTime
+    
     sessionList = findSession(SEARCH, ui.contentField->text().toStdString(), 
-        ui.nicknameField->text().toStdString(), ui.hostField->text().toStdString());
+        ui.nicknameField->text().toStdString(), ui.hostField->text().toStdString(),
+        ui.dateEditBegin->text().toStdString(), ui.dateEditEnd->text().toStdString());
     renderList();
 }
 
@@ -103,4 +107,9 @@ void HistoryForm::renderMessages()
 
     ui.messageDisplay->verticalScrollBar()->setValue(ui.messageDisplay->verticalScrollBar()->maximum());
 
+}
+
+void HistoryForm::closeEvent(QCloseEvent*)
+{
+    emit ExitWin();
 }

@@ -18,10 +18,10 @@ int openDB();
 int insertMessage(string chatSessionId, string nickname, string content);
 int createSession(string host, string nickname);
 
-QList<struct ListEntry> findSession(int type, string content,
-	string nickname, string host);
-QList<struct ChatEntry> getChatData(int sessionId, string content,
-	string nickname, string host);
+QList<struct ChatEntry> getChatData(int sessionId, string content, string nickname,
+	string host, string timeStart, string timeEnd);
+QList<struct ListEntry> findSession(int type, string content, string nickname,
+	string host, string timeStart, string timeEnd);
 
 struct ListEntry
 {

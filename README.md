@@ -1,1 +1,2 @@
-# pop-chat
+# PopChat
+PopChat is an open-source online chatting software licensed under the General Public License v3 (GPLv3) and implements the client/server networking protocol based on the application layer protocol POP/1.0. It supports group chat on any computer that runs an instance of PopChat Client that has access to a PopChat server. The network communication is implemented on top of Windows Socket 2 and the graphical user interface is implemented on top of Qt, an open-source framework.
