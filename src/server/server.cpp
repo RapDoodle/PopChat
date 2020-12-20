@@ -50,8 +50,6 @@ int main(int argc, char** argv)
         i += 2;
     }
 
-    cout << dbUsername << " " << dbPassword << " " << dbPort << endl;
-
     cout << endl;
     cout << "    _____               _____ _           _    " << endl;
     cout << "   |  __ \\             / ____| |         | |  " << endl;
