@@ -18,7 +18,7 @@ PopChat is an open-source online chatting software licensed under the General Pu
     ```
 1. Open cmd or PowerShell, `cd` to the directory of the executable. Specify the parameters
     ~~~shell
-    server -p [port number] --dbu [username] -dbp [password] --dbport [db port number]
+    server -p [port number] --dbu [username] --dbp [password] --dbport [db port number]
     ~~~
     By default, the server will run on port `8000`, the username for the database is `test`, the password for the database is empty, and the default database port number defaults to MySQL's default port number `3306`. If you start your MySQL server using XAMPP and made no modification to the database's profile, for command prompt, to run the server on port 1234
     ~~~shell
