@@ -12,6 +12,46 @@ int mainSock;
 
 int main(int argc, char** argv)
 {
+    /* Verify the number of arguments */
+    if (argc % 2 == 0) {
+        if (argc == 2) {
+            string param = argv[1];
+            if (param == "-h" || param == "--help") {
+                cout << "server -p [port number] --dbu [username] -dbp [password] --dbport [db port number]" << endl;
+                exit(0);
+            }
+        }
+        cout << "Invalid number of parameters. Use server.exe --help for more information." << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    /* Determine the port number */
+    int port = DEFAULT_PORT;
+    string dbUsername = "root";
+    string dbPassword = "";
+    int dbPort = 3306;
+
+    int i = 1;
+    while (i < argc) {
+        string param = argv[i];
+
+        if (param == "-p" || param == "--port") {
+            port = atoi(argv[i + 1]);
+        } else if (param == "--dbu") {
+            dbUsername = argv[i + 1];
+        } else if (param == "--dbp") {
+            dbPassword = argv[i + 1];
+        } else if (param == "--dbport") {
+            dbPort = atoi(argv[i + 1]);
+        } else {
+            cout << "Invalid parameter. Check for manual using server.exe -h for more information.";
+            exit(EXIT_FAILURE);
+        }
+        i += 2;
+    }
+
+    cout << dbUsername << " " << dbPassword << " " << dbPort << endl;
+
     cout << endl;
     cout << "    _____               _____ _           _    " << endl;
     cout << "   |  __ \\             / ____| |         | |  " << endl;
@@ -26,15 +66,8 @@ int main(int argc, char** argv)
     string versionInfo = "Pop Chat Server v" SRV_VERSION;
     consoleLog(versionInfo);
 
-    /* Determine the port number */
-    int port = DEFAULT_PORT;
-    if (argc > 1) {
-        cout << argv[1];
-        port = atoi(argv[1]);
-    }
-
     /* Initialize the database */
-    if (dbInit() < 0) {
+    if (dbInit(dbUsername, dbPassword, dbPort) < 0) {
         exit(EXIT_FAILURE);
     }
 
