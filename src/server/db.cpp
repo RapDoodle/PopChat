@@ -8,7 +8,7 @@
 MYSQL dbConn;
 MYSQL_RES* queryResult;
 
-int dbInit()
+int dbInit(string username, string password, int port)
 {
 	if (mysql_init(&dbConn) == NULL) {
 		consoleLog("Failed to initialize MySQL connection");
@@ -17,7 +17,7 @@ int dbInit()
 		consoleLog("Sucessfully initialized MySQL connection");
 	}
 
-	if (mysql_real_connect(&dbConn, "localhost", "root", "", "pop", 3306, NULL, 0) == NULL) {
+	if (mysql_real_connect(&dbConn, "localhost", username.c_str(), password.c_str(), "pop", port, NULL, 0) == NULL) {
 		consoleLog("Failed to connect to MySQL server");
 		return -1;
 	} else {

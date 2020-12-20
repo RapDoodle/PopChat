@@ -5,7 +5,7 @@ using namespace std;
 #include <stdlib.h>
 #include <iostream>
 
-int dbInit();
+int dbInit(string username, string password, int port);
 int executeQuery(string query, bool isSelect);
 int createChatSession();
 int createSocketSession(string ip, string nickname);
